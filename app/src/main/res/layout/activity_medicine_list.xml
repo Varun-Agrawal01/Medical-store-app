@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical">
+
+    <!-- Top Action Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/teal_primary"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/btnBackMedList"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:src="@drawable/back_arrow"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/tvMedListTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:text="Medicines Catalogue"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnCartMedList"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="View Cart"
+            android:src="@drawable/ic_shopping_cart"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <!-- Search Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_margin="12dp"
+        android:background="@drawable/edit_text_border"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@android:drawable/ic_menu_search"
+            app:tint="@color/text_secondary"
+            android:contentDescription="Search Icon" />
+
+        <EditText
+            android:id="@+id/etSearchMedList"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="Search Medicine by name..."
+            android:inputType="text"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMedList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="8dp" />
+</LinearLayout>
