@@ -56,6 +56,20 @@
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/tvMatchedSymptomsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="#E0F2F1"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="Treats 2 symptoms"
+            android:textColor="@color/teal_primary_dark"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

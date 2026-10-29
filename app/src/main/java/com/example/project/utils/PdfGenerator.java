@@ -32,7 +32,7 @@ public class PdfGenerator {
         headerPaint.setFakeBoldText(true);
 
         Paint subHeaderPaint = new Paint();
-        subHeaderPaint.setColor(Color.DARKGRAY);
+        subHeaderPaint.setColor(Color.DKGRAY);
         subHeaderPaint.setTextSize(14f);
 
         Paint textPaint = new Paint();

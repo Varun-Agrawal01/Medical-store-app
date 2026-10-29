@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
@@ -16,22 +18,45 @@ import com.example.project.models.CartItem;
 import com.example.project.utils.FormatUtils;
 
 import java.util.List;
+import java.util.Objects;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
+public class CartAdapter extends ListAdapter<CartItem, CartAdapter.ViewHolder> {
 
     public interface OnCartChangeListener {
         void onQuantityChange(CartItem item, int newQuantity);
         void onRemoveItem(CartItem item);
     }
 
+    private static final DiffUtil.ItemCallback<CartItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<CartItem>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull CartItem oldItem, @NonNull CartItem newItem) {
+            return Objects.equals(oldItem.getMedicineId(), newItem.getMedicineId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull CartItem oldItem, @NonNull CartItem newItem) {
+            return oldItem.getQuantity() == newItem.getQuantity() &&
+                    Double.compare(oldItem.getPrice(), newItem.getPrice()) == 0 &&
+                    Objects.equals(oldItem.getMedicineName(), newItem.getMedicineName());
+        }
+    };
+
     private final Context context;
-    private final List<CartItem> cartList;
     private final OnCartChangeListener listener;
 
-    public CartAdapter(Context context, List<CartItem> cartList, OnCartChangeListener listener) {
+    public CartAdapter(Context context, OnCartChangeListener listener) {
+        super(DIFF_CALLBACK);
         this.context = context;
-        this.cartList = cartList;
         this.listener = listener;
+    }
+
+    public CartAdapter(Context context, List<CartItem> initialList, OnCartChangeListener listener) {
+        super(DIFF_CALLBACK);
+        this.context = context;
+        this.listener = listener;
+        if (initialList != null) {
+            submitList(initialList);
+        }
     }
 
     @NonNull
@@ -43,7 +68,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        CartItem item = cartList.get(position);
+        CartItem item = getItem(position);
         holder.tvName.setText(item.getMedicineName());
         holder.tvUnitPrice.setText(FormatUtils.formatPrice(item.getPrice()) + " each");
         holder.tvQuantity.setText(String.valueOf(item.getQuantity()));
@@ -66,11 +91,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 listener.onRemoveItem(item);
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return cartList != null ? cartList.size() : 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

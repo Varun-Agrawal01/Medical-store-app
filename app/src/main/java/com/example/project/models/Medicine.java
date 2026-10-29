@@ -4,18 +4,28 @@ public class Medicine {
     private String id;
     private String name;
     private String genericName;
+    private String manufacturer;
+    private String strength;
+    private String packSize;
+    private String dosageForm;
     private String description;
+    private String usageInfo;
+    private String sideEffects;
+    private double mrp;
     private double price;
+    private double gstRate;
     private int stock;
-    private String imageUrl;
     private boolean active;
     private boolean requiresPrescription;
     private String category;
+    private String imageUrl;
+    private int minAge;
+    private int avoidInPregnancy;
+    private int matchedSymptomsCount;
     private long createdAt;
     private long updatedAt;
 
     public Medicine() {
-        // Required for Firestore
         this.active = true;
     }
 
@@ -28,6 +38,7 @@ public class Medicine {
         this.genericName = genericName;
         this.description = description;
         this.price = price;
+        this.mrp = price;
         this.stock = stock;
         this.imageUrl = imageUrl;
         this.active = active;
@@ -61,6 +72,38 @@ public class Medicine {
         this.genericName = genericName;
     }
 
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public String getStrength() {
+        return strength;
+    }
+
+    public void setStrength(String strength) {
+        this.strength = strength;
+    }
+
+    public String getPackSize() {
+        return packSize;
+    }
+
+    public void setPackSize(String packSize) {
+        this.packSize = packSize;
+    }
+
+    public String getDosageForm() {
+        return dosageForm;
+    }
+
+    public void setDosageForm(String dosageForm) {
+        this.dosageForm = dosageForm;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -69,12 +112,44 @@ public class Medicine {
         this.description = description;
     }
 
+    public String getUsageInfo() {
+        return usageInfo;
+    }
+
+    public void setUsageInfo(String usageInfo) {
+        this.usageInfo = usageInfo;
+    }
+
+    public String getSideEffects() {
+        return sideEffects;
+    }
+
+    public void setSideEffects(String sideEffects) {
+        this.sideEffects = sideEffects;
+    }
+
+    public double getMrp() {
+        return mrp;
+    }
+
+    public void setMrp(double mrp) {
+        this.mrp = mrp;
+    }
+
     public double getPrice() {
         return price;
     }
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public double getGstRate() {
+        return gstRate;
+    }
+
+    public void setGstRate(double gstRate) {
+        this.gstRate = gstRate;
     }
 
     public int getStock() {
@@ -115,6 +190,30 @@ public class Medicine {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public int getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(int minAge) {
+        this.minAge = minAge;
+    }
+
+    public int getAvoidInPregnancy() {
+        return avoidInPregnancy;
+    }
+
+    public void setAvoidInPregnancy(int avoidInPregnancy) {
+        this.avoidInPregnancy = avoidInPregnancy;
+    }
+
+    public int getMatchedSymptomsCount() {
+        return matchedSymptomsCount;
+    }
+
+    public void setMatchedSymptomsCount(int matchedSymptomsCount) {
+        this.matchedSymptomsCount = matchedSymptomsCount;
     }
 
     public long getCreatedAt() {

@@ -1,5 +1,6 @@
 package com.example.project.customer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -7,14 +8,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.project.R;
-import com.example.project.data.FirestoreRepository;
+import com.example.project.data.MediRepository;
 import com.example.project.models.CartItem;
 import com.example.project.models.Medicine;
 import com.example.project.models.User;
 import com.example.project.utils.FormatUtils;
+import com.example.project.utils.SessionManager;
 
 import java.util.List;
 
@@ -22,9 +25,10 @@ public class MedicineDetailActivity extends AppCompatActivity {
 
     private TextView tvName, tvGeneric, tvPrice, tvRxTag, tvStockStatus, tvDescription, tvQuantity;
     private Button btnMinus, btnPlus, btnAddToCart;
-    private ImageButton btnBack;
+    private ImageButton btnBack, btnCart;
 
-    private FirestoreRepository repository;
+    private MediRepository repository;
+    private SessionManager sessionManager;
     private String medicineId;
     private Medicine currentMedicine;
     private int selectedQuantity = 1;
@@ -35,10 +39,13 @@ public class MedicineDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.medicine_detail);
 
-        repository = FirestoreRepository.getInstance(this);
+        repository = MediRepository.getInstance(this);
+        sessionManager = new SessionManager(this);
         currentUser = repository.getCurrentUser();
 
         btnBack = findViewById(R.id.btnBackDetail);
+        btnCart = findViewById(R.id.btnCartDetail);
+
         tvName = findViewById(R.id.tvDetailName);
         tvGeneric = findViewById(R.id.tvDetailGeneric);
         tvPrice = findViewById(R.id.tvDetailPrice);
@@ -52,6 +59,7 @@ public class MedicineDetailActivity extends AppCompatActivity {
         btnAddToCart = findViewById(R.id.btnAddToCartDetail);
 
         btnBack.setOnClickListener(v -> finish());
+        btnCart.setOnClickListener(v -> startActivity(new Intent(MedicineDetailActivity.this, CartActivity.class)));
 
         if (getIntent().hasExtra("medicineId")) {
             medicineId = getIntent().getStringExtra("medicineId");
@@ -81,21 +89,18 @@ public class MedicineDetailActivity extends AppCompatActivity {
     }
 
     private void loadMedicineDetails() {
-        repository.getMedicines(new FirestoreRepository.Callback<List<Medicine>>() {
+        // Query single row directly rather than loading all medicines and looping
+        repository.getMedicineById(medicineId, new MediRepository.Callback<Medicine>() {
             @Override
-            public void onSuccess(List<Medicine> result) {
-                for (Medicine m : result) {
-                    if (m.getId().equals(medicineId)) {
-                        currentMedicine = m;
-                        displayMedicineInfo(m);
-                        break;
-                    }
-                }
+            public void onSuccess(Medicine m) {
+                currentMedicine = m;
+                displayMedicineInfo(m);
             }
 
             @Override
             public void onError(String error) {
                 Toast.makeText(MedicineDetailActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
@@ -131,40 +136,40 @@ public class MedicineDetailActivity extends AppCompatActivity {
             return;
         }
 
-        String userId = currentUser != null ? currentUser.getUid() : "guest";
-        repository.getCart(userId, new FirestoreRepository.Callback<List<CartItem>>() {
+        String userId = sessionManager.getUserId() != null ? sessionManager.getUserId() : "guest";
+        CartItem cartItem = new CartItem(
+                currentMedicine.getId(),
+                currentMedicine.getName(),
+                currentMedicine.getPrice(),
+                selectedQuantity,
+                currentMedicine.isRequiresPrescription()
+        );
+
+        btnAddToCart.setEnabled(false);
+        repository.addToCart(userId, cartItem, new MediRepository.Callback<Void>() {
             @Override
-            public void onSuccess(List<CartItem> cartItems) {
-                boolean exists = false;
-                for (CartItem ci : cartItems) {
-                    if (ci.getMedicineId().equals(currentMedicine.getId())) {
-                        ci.setQuantity(ci.getQuantity() + selectedQuantity);
-                        exists = true;
-                        break;
-                    }
-                }
-                if (!exists) {
-                    cartItems.add(new CartItem(currentMedicine.getId(), currentMedicine.getName(), currentMedicine.getPrice(), selectedQuantity, currentMedicine.isRequiresPrescription()));
-                }
-
-                repository.saveCart(userId, cartItems, new FirestoreRepository.Callback<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        Toast.makeText(MedicineDetailActivity.this, selectedQuantity + " x " + currentMedicine.getName() + " added to cart!", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        Toast.makeText(MedicineDetailActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onSuccess(Void result) {
+                btnAddToCart.setEnabled(true);
+                showAddedToCartDialog();
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(MedicineDetailActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                btnAddToCart.setEnabled(true);
+                Toast.makeText(MedicineDetailActivity.this, "Failed to add to cart: " + error, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showAddedToCartDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Added to Cart")
+                .setMessage(currentMedicine.getName() + " (" + selectedQuantity + ") has been added to your cart.")
+                .setPositiveButton("View Cart", (dialog, which) -> {
+                    Intent intent = new Intent(MedicineDetailActivity.this, CartActivity.class);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Continue Shopping", null)
+                .show();
     }
 }

@@ -1,3 +1,60 @@
 <resources>
-    <string name="app_name">project</string>
+    <string name="app_name">Medi Store</string>
+    <string name="splash_tagline">Your trusted pharmacy companion</string>
+    <string name="symptom_disclaimer">Note: This feature allows browsing reviewed catalogue categories. It is not a medical diagnosis or automatic prescription engine.</string>
+
+    <!-- Auth & Profile -->
+    <string name="login_title">Customer Sign In</string>
+    <string name="admin_login_title">Pharmacist / Admin Portal</string>
+    <string name="register_title">Create Customer Account</string>
+    <string name="profile_title">My Profile</string>
+    <string name="edit_profile_title">Edit Profile Details</string>
+    <string name="change_password_title">Change Password</string>
+    <string name="lbl_name">Full Name</string>
+    <string name="lbl_email">Email Address</string>
+    <string name="lbl_phone">Phone Number (10 digits)</string>
+    <string name="lbl_current_password">Current Password</string>
+    <string name="lbl_new_password">New Password (min 8 chars, letter &amp; digit)</string>
+    <string name="lbl_confirm_password">Confirm New Password</string>
+    <string name="btn_save_changes">Save Changes</string>
+    <string name="btn_update_password">Update Password</string>
+    <string name="btn_edit_profile">Edit Profile</string>
+    <string name="btn_change_password">Change Password</string>
+    <string name="btn_logout">Log Out</string>
+    <string name="msg_profile_updated">Profile updated successfully</string>
+    <string name="msg_password_updated">Password changed successfully</string>
+    <string name="msg_logout_success">Logged out successfully</string>
+
+    <!-- Validation Errors -->
+    <string name="err_empty_name">Please enter your full name</string>
+    <string name="err_invalid_phone">Please enter a valid 10-digit Indian phone number starting with 6-9</string>
+    <string name="err_invalid_email">Please enter a valid email address</string>
+    <string name="err_invalid_password">Password must be at least 8 characters and contain both letters and digits</string>
+    <string name="err_password_mismatch">New passwords do not match</string>
+    <string name="err_fill_all_fields">Please fill in all required fields</string>
+
+    <!-- Symptom Checker v2 -->
+    <string name="title_symptom_checker">Symptom Checker</string>
+    <string name="hint_search_symptoms">Filter symptoms (e.g. fever, headache)...</string>
+    <string name="lbl_select_symptoms">Select Symptoms:</string>
+    <string name="lbl_optional_filters">Filters</string>
+    <string name="filter_pregnant">Pregnant or Breastfeeding Safe Only</string>
+    <string name="filter_exclude_rx">Exclude Prescription-Required (Rx)</string>
+    <string name="age_all">All Ages</string>
+    <string name="age_child">Child (Under 12)</string>
+    <string name="age_adult">Adult (12 - 65)</string>
+    <string name="age_senior">Senior (65+)</string>
+    <string name="btn_find_medicines">Find Recommended Medicines</string>
+    <string name="red_flag_alert_title">Red Flag Advisory</string>
+    <string name="matched_symptoms_badge">%1$d matching symptom(s)</string>
+    <string name="no_medicines_matched">No medicines match all the selected symptoms and filters. Try unchecking restrictive filters.</string>
+
+    <!-- List States -->
+    <string name="lbl_loading">Loading data...</string>
+    <string name="lbl_empty_medicines">No medicines found.</string>
+    <string name="lbl_empty_cart">Your shopping cart is empty.</string>
+    <string name="lbl_empty_orders">You have placed no orders yet.</string>
+    <string name="btn_retry">Retry</string>
+    <string name="lbl_popular_symptoms">Browse by Symptom</string>
+    <string name="title_order_history">My Order History</string>
 </resources>

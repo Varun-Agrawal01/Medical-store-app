@@ -9,7 +9,6 @@ public class User {
     private long createdAt;
 
     public User() {
-        // Required for Firestore
     }
 
     public User(String uid, String name, String email, String phone, String role, long createdAt) {
@@ -27,6 +26,14 @@ public class User {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getId() {
+        return uid;
+    }
+
+    public void setId(String id) {
+        this.uid = id;
     }
 
     public String getName() {

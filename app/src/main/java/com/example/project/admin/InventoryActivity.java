@@ -16,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
 import com.example.project.adapters.MedicineAdapter;
-import com.example.project.data.FirestoreRepository;
+import com.example.project.auth.AdminLoginActivity;
+import com.example.project.data.MediRepository;
 import com.example.project.models.Medicine;
+import com.example.project.models.User;
+import com.example.project.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +32,41 @@ public class InventoryActivity extends AppCompatActivity {
     private Button btnAddMedicine;
     private ImageButton btnBack;
 
-    private FirestoreRepository repository;
+    private MediRepository repository;
+    private SessionManager sessionManager;
     private MedicineAdapter adapter;
-    private List<Medicine> allMedicines = new ArrayList<>();
-    private List<Medicine> displayedMedicines = new ArrayList<>();
+    private final List<Medicine> allMedicines = new ArrayList<>();
+    private final List<Medicine> displayedMedicines = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.inventory_page);
 
-        repository = FirestoreRepository.getInstance(this);
+        // Role Guard
+        sessionManager = new SessionManager(this);
+        repository = MediRepository.getInstance(this);
+
+        String currentUserId = sessionManager.getUserId();
+        if (currentUserId == null) {
+            redirectToLogin();
+            return;
+        }
+
+        repository.getUserById(currentUserId, new MediRepository.Callback<User>() {
+            @Override
+            public void onSuccess(User user) {
+                if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
+                    redirectToLogin();
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                redirectToLogin();
+            }
+        });
+
+        setContentView(R.layout.inventory_page);
 
         rvInventory = findViewById(R.id.rvInventoryMedicines);
         etSearch = findViewById(R.id.editTextText9);
@@ -54,7 +81,7 @@ public class InventoryActivity extends AppCompatActivity {
         });
 
         rvInventory.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MedicineAdapter(this, displayedMedicines, true, new MedicineAdapter.OnMedicineClickListener() {
+        adapter = new MedicineAdapter(this, true, new MedicineAdapter.OnMedicineClickListener() {
             @Override
             public void onMedicineClick(Medicine medicine) {
                 showStockOptionDialog(medicine);
@@ -86,6 +113,13 @@ public class InventoryActivity extends AppCompatActivity {
         });
     }
 
+    private void redirectToLogin() {
+        Intent intent = new Intent(this, AdminLoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -93,7 +127,7 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void loadInventory() {
-        repository.getMedicines(new FirestoreRepository.Callback<List<Medicine>>() {
+        repository.getMedicines(new MediRepository.Callback<List<Medicine>>() {
             @Override
             public void onSuccess(List<Medicine> result) {
                 allMedicines.clear();
@@ -103,7 +137,7 @@ public class InventoryActivity extends AppCompatActivity {
 
             @Override
             public void onError(String error) {
-                Toast.makeText(InventoryActivity.this, "Error loading inventory: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(InventoryActivity.this, "Failed to load inventory: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -111,79 +145,95 @@ public class InventoryActivity extends AppCompatActivity {
     private void filterMedicines(String query) {
         displayedMedicines.clear();
         String q = query.trim().toLowerCase();
-        for (Medicine m : allMedicines) {
-            if (q.isEmpty() || m.getName().toLowerCase().contains(q) || (m.getGenericName() != null && m.getGenericName().toLowerCase().contains(q))) {
-                displayedMedicines.add(m);
+        if (q.isEmpty()) {
+            displayedMedicines.addAll(allMedicines);
+        } else {
+            for (Medicine m : allMedicines) {
+                if ((m.getName() != null && m.getName().toLowerCase().contains(q)) ||
+                        (m.getGenericName() != null && m.getGenericName().toLowerCase().contains(q)) ||
+                        (m.getCategory() != null && m.getCategory().toLowerCase().contains(q))) {
+                    displayedMedicines.add(m);
+                }
             }
         }
-        adapter.notifyDataSetChanged();
+        adapter.submitList(new ArrayList<>(displayedMedicines));
     }
 
     private void showStockOptionDialog(Medicine medicine) {
-        String[] options = {"Refill / Set Stock", "Edit Full Medicine Record"};
+        String[] options = {"Edit Details", "Add Stock (+10)", "Add Stock (+50)", "Set Specific Stock", "Toggle Active / Inactive"};
         new AlertDialog.Builder(this)
-                .setTitle(medicine.getName() + " - Admin Action")
+                .setTitle(medicine.getName() + " (Current Stock: " + medicine.getStock() + ")")
                 .setItems(options, (dialog, which) -> {
-                    if (which == 0) {
-                        showRefillStockDialog(medicine);
-                    } else {
-                        Intent intent = new Intent(InventoryActivity.this, AddEditMedicineActivity.class);
-                        intent.putExtra("medicineId", medicine.getId());
-                        startActivity(intent);
+                    switch (which) {
+                        case 0:
+                            Intent intent = new Intent(InventoryActivity.this, AddEditMedicineActivity.class);
+                            intent.putExtra("medicineId", medicine.getId());
+                            startActivity(intent);
+                            break;
+                        case 1:
+                            quickUpdateStock(medicine, 10, false);
+                            break;
+                        case 2:
+                            quickUpdateStock(medicine, 50, false);
+                            break;
+                        case 3:
+                            showCustomStockDialog(medicine);
+                            break;
+                        case 4:
+                            toggleMedicineActive(medicine);
+                            break;
                     }
                 })
                 .show();
     }
 
-    private void showRefillStockDialog(Medicine medicine) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Refill / Update Stock for " + medicine.getName());
+    private void quickUpdateStock(Medicine m, int amount, boolean isSetMode) {
+        repository.updateStock(m.getId(), amount, isSetMode, new MediRepository.Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                Toast.makeText(InventoryActivity.this, "Stock updated successfully", Toast.LENGTH_SHORT).show();
+                loadInventory();
+            }
 
-        final EditText etQuantity = new EditText(this);
-        etQuantity.setHint("Enter Quantity");
-        etQuantity.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
-        etQuantity.setPadding(32, 32, 32, 32);
-        builder.setView(etQuantity);
-
-        builder.setPositiveButton("Add Stock (+)", (dialog, which) -> {
-            String val = etQuantity.getText().toString().trim();
-            if (!val.isEmpty()) {
-                int addQty = Integer.parseInt(val);
-                repository.updateStock(medicine.getId(), addQty, false, new FirestoreRepository.Callback<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        Toast.makeText(InventoryActivity.this, "Stock added successfully!", Toast.LENGTH_SHORT).show();
-                        loadInventory();
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        Toast.makeText(InventoryActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onError(String error) {
+                Toast.makeText(InventoryActivity.this, "Stock update failed: " + error, Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-        builder.setNeutralButton("Set Exact Stock (=)", (dialog, which) -> {
-            String val = etQuantity.getText().toString().trim();
-            if (!val.isEmpty()) {
-                int setQty = Integer.parseInt(val);
-                repository.updateStock(medicine.getId(), setQty, true, new FirestoreRepository.Callback<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        Toast.makeText(InventoryActivity.this, "Stock set to " + setQty, Toast.LENGTH_SHORT).show();
-                        loadInventory();
-                    }
+    private void showCustomStockDialog(Medicine medicine) {
+        final EditText input = new EditText(this);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        input.setHint("Enter stock count");
 
-                    @Override
-                    public void onError(String error) {
-                        Toast.makeText(InventoryActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(this)
+                .setTitle("Set Stock for " + medicine.getName())
+                .setView(input)
+                .setPositiveButton("Set", (dialog, which) -> {
+                    String str = input.getText().toString().trim();
+                    if (!str.isEmpty()) {
+                        int newStock = Integer.parseInt(str);
+                        quickUpdateStock(medicine, newStock, true);
                     }
-                });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void toggleMedicineActive(Medicine m) {
+        m.setActive(!m.isActive());
+        repository.saveMedicine(m, new MediRepository.Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                Toast.makeText(InventoryActivity.this, "Medicine status toggled to " + (m.isActive() ? "Active" : "Inactive"), Toast.LENGTH_SHORT).show();
+                loadInventory();
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(InventoryActivity.this, "Failed to toggle status: " + error, Toast.LENGTH_SHORT).show();
             }
         });
-
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
     }
 }

@@ -7,7 +7,7 @@ public class OrderItem {
     private int quantity;
 
     public OrderItem() {
-        // Required for Firestore
+        // Default constructor
     }
 
     public OrderItem(String medicineId, String medicineName, double unitPrice, int quantity) {
@@ -53,3 +53,4 @@ public class OrderItem {
         return unitPrice * quantity;
     }
 }
+

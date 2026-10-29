@@ -1,5 +1,6 @@
 package com.example.project.admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,10 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.project.R;
-import com.example.project.data.FirestoreRepository;
+import com.example.project.auth.AdminLoginActivity;
+import com.example.project.data.MediRepository;
 import com.example.project.models.Medicine;
-
-import java.util.List;
+import com.example.project.models.User;
+import com.example.project.utils.SessionManager;
 
 public class AddEditMedicineActivity extends AppCompatActivity {
 
@@ -24,16 +26,40 @@ public class AddEditMedicineActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private TextView tvTitle;
 
-    private FirestoreRepository repository;
+    private MediRepository repository;
+    private SessionManager sessionManager;
     private String medicineId = null;
     private Medicine currentMedicine = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_edit_medicine);
 
-        repository = FirestoreRepository.getInstance(this);
+        // Role Guard
+        sessionManager = new SessionManager(this);
+        repository = MediRepository.getInstance(this);
+
+        String currentUserId = sessionManager.getUserId();
+        if (currentUserId == null) {
+            redirectToLogin();
+            return;
+        }
+
+        repository.getUserById(currentUserId, new MediRepository.Callback<User>() {
+            @Override
+            public void onSuccess(User user) {
+                if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
+                    redirectToLogin();
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                redirectToLogin();
+            }
+        });
+
+        setContentView(R.layout.activity_add_edit_medicine);
 
         tvTitle = findViewById(R.id.tvAddEditTitle);
         btnBack = findViewById(R.id.btnBackAddEdit);
@@ -62,22 +88,26 @@ public class AddEditMedicineActivity extends AppCompatActivity {
         btnSave.setOnClickListener(v -> saveMedicine());
     }
 
+    private void redirectToLogin() {
+        Intent intent = new Intent(this, AdminLoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
     private void loadExistingMedicine() {
-        repository.getMedicines(new FirestoreRepository.Callback<List<Medicine>>() {
+        // Query single row directly rather than loading all medicines and looping
+        repository.getMedicineById(medicineId, new MediRepository.Callback<Medicine>() {
             @Override
-            public void onSuccess(List<Medicine> result) {
-                for (Medicine m : result) {
-                    if (m.getId().equals(medicineId)) {
-                        currentMedicine = m;
-                        populateFields(m);
-                        break;
-                    }
-                }
+            public void onSuccess(Medicine m) {
+                currentMedicine = m;
+                populateFields(m);
             }
 
             @Override
             public void onError(String error) {
                 Toast.makeText(AddEditMedicineActivity.this, "Failed to load medicine: " + error, Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
@@ -102,7 +132,7 @@ public class AddEditMedicineActivity extends AppCompatActivity {
         String description = etDescription.getText().toString().trim();
 
         if (name.isEmpty() || priceStr.isEmpty() || stockStr.isEmpty()) {
-            Toast.makeText(this, "Name, Price, and Stock quantity are required!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill in all required fields (Name, Price, Stock)", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -112,12 +142,7 @@ public class AddEditMedicineActivity extends AppCompatActivity {
             price = Double.parseDouble(priceStr);
             stock = Integer.parseInt(stockStr);
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid Price or Stock format", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (price < 0 || stock < 0) {
-            Toast.makeText(this, "Price and Stock cannot be negative!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter valid numbers for Price and Stock", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -126,24 +151,24 @@ public class AddEditMedicineActivity extends AppCompatActivity {
         m.setGenericName(generic);
         m.setPrice(price);
         m.setStock(stock);
-        m.setCategory(category.isEmpty() ? "General" : category);
+        m.setCategory(category.isEmpty() ? "cat_analgesics" : category);
         m.setDescription(description);
         m.setActive(switchActive.isChecked());
         m.setRequiresPrescription(switchRxRequired.isChecked());
 
         btnSave.setEnabled(false);
-        repository.saveMedicine(m, new FirestoreRepository.Callback<Void>() {
+        repository.saveMedicine(m, new MediRepository.Callback<Void>() {
             @Override
             public void onSuccess(Void result) {
                 btnSave.setEnabled(true);
-                Toast.makeText(AddEditMedicineActivity.this, "Medicine record saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddEditMedicineActivity.this, "Medicine record saved successfully!", Toast.LENGTH_SHORT).show();
                 finish();
             }
 
             @Override
             public void onError(String error) {
                 btnSave.setEnabled(true);
-                Toast.makeText(AddEditMedicineActivity.this, "Save failed: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddEditMedicineActivity.this, "Failed to save medicine: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }

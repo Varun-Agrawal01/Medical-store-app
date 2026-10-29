@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
@@ -17,22 +19,45 @@ import com.example.project.models.OrderItem;
 import com.example.project.utils.FormatUtils;
 
 import java.util.List;
+import java.util.Objects;
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
+public class OrderAdapter extends ListAdapter<Order, OrderAdapter.ViewHolder> {
 
     public interface OnOrderClickListener {
         void onOrderClick(Order order);
         void onViewInvoiceClick(Order order);
     }
 
+    private static final DiffUtil.ItemCallback<Order> DIFF_CALLBACK = new DiffUtil.ItemCallback<Order>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Order oldItem, @NonNull Order newItem) {
+            return Objects.equals(oldItem.getOrderId(), newItem.getOrderId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Order oldItem, @NonNull Order newItem) {
+            return Objects.equals(oldItem.getStatus(), newItem.getStatus()) &&
+                    Double.compare(oldItem.getTotal(), newItem.getTotal()) == 0 &&
+                    oldItem.getUpdatedAt() == newItem.getUpdatedAt();
+        }
+    };
+
     private final Context context;
-    private final List<Order> orderList;
     private final OnOrderClickListener listener;
 
-    public OrderAdapter(Context context, List<Order> orderList, OnOrderClickListener listener) {
+    public OrderAdapter(Context context, OnOrderClickListener listener) {
+        super(DIFF_CALLBACK);
         this.context = context;
-        this.orderList = orderList;
         this.listener = listener;
+    }
+
+    public OrderAdapter(Context context, List<Order> initialList, OnOrderClickListener listener) {
+        super(DIFF_CALLBACK);
+        this.context = context;
+        this.listener = listener;
+        if (initialList != null) {
+            submitList(initialList);
+        }
     }
 
     @NonNull
@@ -44,7 +69,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Order order = orderList.get(position);
+        Order order = getItem(position);
         holder.tvOrderId.setText("Order #" + order.getOrderId());
         holder.tvOrderStatus.setText(order.getStatus());
 
@@ -88,11 +113,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         holder.btnInvoice.setOnClickListener(v -> {
             if (listener != null) listener.onViewInvoiceClick(order);
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return orderList != null ? orderList.size() : 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

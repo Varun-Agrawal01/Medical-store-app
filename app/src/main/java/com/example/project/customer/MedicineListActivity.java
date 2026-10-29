@@ -2,58 +2,79 @@ package com.example.project.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.project.R;
 import com.example.project.adapters.MedicineAdapter;
-import com.example.project.data.FirestoreRepository;
+import com.example.project.data.MediRepository;
 import com.example.project.models.CartItem;
 import com.example.project.models.Medicine;
-import com.example.project.models.User;
+import com.example.project.utils.SessionManager;
+import com.example.project.viewmodels.MedicineListViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MedicineListActivity extends AppCompatActivity {
 
     private RecyclerView rvMedicines;
     private EditText etSearch;
     private ImageButton btnBack, btnCart;
-    private TextView tvCategoryTitle;
+    private TextView tvCategoryTitle, tvMedListEmpty, tvMedListErrorMsg;
+    private ProgressBar pbMedListLoading;
+    private LinearLayout layoutMedListError;
+    private Button btnMedListRetry;
+    private SwipeRefreshLayout swipeRefreshMedList;
 
-    private FirestoreRepository repository;
+    private MedicineListViewModel viewModel;
     private MedicineAdapter adapter;
-    private List<Medicine> allMedicines = new ArrayList<>();
-    private List<Medicine> displayedMedicines = new ArrayList<>();
-    private String filterCategory = null;
-    private User currentUser;
+    private SessionManager sessionManager;
+
+    private final Handler searchHandler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.inventory_page); // Reuse inventory layout XML safely for browsing
+        setContentView(R.layout.activity_medicine_list);
 
-        repository = FirestoreRepository.getInstance(this);
-        currentUser = repository.getCurrentUser();
+        sessionManager = new SessionManager(this);
+        viewModel = new ViewModelProvider(this).get(MedicineListViewModel.class);
 
-        rvMedicines = findViewById(R.id.rvInventoryMedicines);
-        etSearch = findViewById(R.id.editTextText9);
-        btnBack = findViewById(R.id.btnBackInventory);
-        tvCategoryTitle = findViewById(R.id.textView26);
+        rvMedicines = findViewById(R.id.rvMedList);
+        etSearch = findViewById(R.id.etSearchMedList);
+        btnBack = findViewById(R.id.btnBackMedList);
+        btnCart = findViewById(R.id.btnCartMedList);
+        tvCategoryTitle = findViewById(R.id.tvMedListTitle);
 
-        findViewById(R.id.btnAddMedicine).setVisibility(android.view.View.GONE);
+        pbMedListLoading = findViewById(R.id.pbMedListLoading);
+        tvMedListEmpty = findViewById(R.id.tvMedListEmpty);
+        layoutMedListError = findViewById(R.id.layoutMedListError);
+        tvMedListErrorMsg = findViewById(R.id.tvMedListErrorMsg);
+        btnMedListRetry = findViewById(R.id.btnMedListRetry);
+        swipeRefreshMedList = findViewById(R.id.swipeRefreshMedList);
 
         btnBack.setOnClickListener(v -> finish());
+        btnCart.setOnClickListener(v -> startActivity(new Intent(MedicineListActivity.this, CartActivity.class)));
 
+        String filterCategory = null;
         if (getIntent().hasExtra("category")) {
             filterCategory = getIntent().getStringExtra("category");
             tvCategoryTitle.setText("Category: " + filterCategory);
@@ -61,8 +82,17 @@ public class MedicineListActivity extends AppCompatActivity {
             tvCategoryTitle.setText("Medicines Catalogue");
         }
 
-        rvMedicines.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MedicineAdapter(this, displayedMedicines, false, new MedicineAdapter.OnMedicineClickListener() {
+        setupRecyclerView();
+        setupSearchAndSwipe();
+        observeViewModel();
+
+        viewModel.init(filterCategory);
+    }
+
+    private void setupRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        rvMedicines.setLayoutManager(layoutManager);
+        adapter = new MedicineAdapter(this, false, new MedicineAdapter.OnMedicineClickListener() {
             @Override
             public void onMedicineClick(Medicine medicine) {
                 Intent intent = new Intent(MedicineListActivity.this, MedicineDetailActivity.class);
@@ -77,18 +107,43 @@ public class MedicineListActivity extends AppCompatActivity {
 
             @Override
             public void onEditClick(Medicine medicine) {
-                // Customer mode
+                // Not in customer mode
             }
         });
         rvMedicines.setAdapter(adapter);
 
+        // Pagination: load medicines 30 at a time using LIMIT/OFFSET and load more on scroll
+        rvMedicines.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) { // Scrolling down
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 5 && firstVisibleItemPosition >= 0) {
+                        viewModel.loadNextPage();
+                    }
+                }
+            }
+        });
+    }
+
+    private void setupSearchAndSwipe() {
+        swipeRefreshMedList.setOnRefreshListener(() -> viewModel.refresh());
+        btnMedListRetry.setOnClickListener(v -> viewModel.refresh());
+
+        // 250ms search debounce with FTS
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterMedicines(s.toString());
+                searchHandler.removeCallbacks(searchRunnable);
+                searchRunnable = () -> viewModel.search(s.toString());
+                searchHandler.postDelayed(searchRunnable, 250);
             }
 
             @Override
@@ -96,79 +151,53 @@ public class MedicineListActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadMedicines();
-    }
-
-    private void loadMedicines() {
-        repository.getMedicines(new FirestoreRepository.Callback<List<Medicine>>() {
-            @Override
-            public void onSuccess(List<Medicine> result) {
-                allMedicines.clear();
-                allMedicines.addAll(result);
-                filterMedicines(etSearch.getText().toString());
+    private void observeViewModel() {
+        viewModel.getMedicines().observe(this, list -> {
+            swipeRefreshMedList.setRefreshing(false);
+            if (list == null || list.isEmpty()) {
+                tvMedListEmpty.setVisibility(View.VISIBLE);
+                rvMedicines.setVisibility(View.GONE);
+                adapter.submitList(new ArrayList<>());
+            } else {
+                tvMedListEmpty.setVisibility(View.GONE);
+                rvMedicines.setVisibility(View.VISIBLE);
+                adapter.submitList(list);
             }
+        });
 
-            @Override
-            public void onError(String error) {
-                Toast.makeText(MedicineListActivity.this, "Error loading catalogue: " + error, Toast.LENGTH_SHORT).show();
+        viewModel.getIsLoading().observe(this, loading -> {
+            if (Boolean.TRUE.equals(loading) && !swipeRefreshMedList.isRefreshing()) {
+                pbMedListLoading.setVisibility(View.VISIBLE);
+            } else {
+                pbMedListLoading.setVisibility(View.GONE);
+            }
+        });
+
+        viewModel.getErrorMessage().observe(this, error -> {
+            swipeRefreshMedList.setRefreshing(false);
+            if (error != null) {
+                layoutMedListError.setVisibility(View.VISIBLE);
+                tvMedListErrorMsg.setText(error);
+                rvMedicines.setVisibility(View.GONE);
+            } else {
+                layoutMedListError.setVisibility(View.GONE);
             }
         });
     }
 
-    private void filterMedicines(String query) {
-        displayedMedicines.clear();
-        String q = query.trim().toLowerCase();
-        for (Medicine m : allMedicines) {
-            boolean matchCategory = filterCategory == null || (m.getCategory() != null && m.getCategory().equalsIgnoreCase(filterCategory));
-            boolean matchQuery = q.isEmpty() || m.getName().toLowerCase().contains(q) || (m.getGenericName() != null && m.getGenericName().toLowerCase().contains(q));
-            if (matchCategory && matchQuery) {
-                displayedMedicines.add(m);
-            }
-        }
-        adapter.notifyDataSetChanged();
-    }
-
     private void addToCart(Medicine medicine) {
-        if (!medicine.isAvailable()) {
-            Toast.makeText(this, medicine.getName() + " is out of stock", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String userId = sessionManager.getUserId() != null ? sessionManager.getUserId() : "guest";
+        CartItem item = new CartItem(medicine.getId(), medicine.getName(), medicine.getPrice(), 1, medicine.isRequiresPrescription());
 
-        String userId = currentUser != null ? currentUser.getUid() : "guest";
-        repository.getCart(userId, new FirestoreRepository.Callback<List<CartItem>>() {
+        MediRepository.getInstance(this).addToCart(userId, item, new MediRepository.Callback<Void>() {
             @Override
-            public void onSuccess(List<CartItem> cartItems) {
-                boolean exists = false;
-                for (CartItem ci : cartItems) {
-                    if (ci.getMedicineId().equals(medicine.getId())) {
-                        ci.setQuantity(ci.getQuantity() + 1);
-                        exists = true;
-                        break;
-                    }
-                }
-                if (!exists) {
-                    cartItems.add(new CartItem(medicine.getId(), medicine.getName(), medicine.getPrice(), 1, medicine.isRequiresPrescription()));
-                }
-
-                repository.saveCart(userId, cartItems, new FirestoreRepository.Callback<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        Toast.makeText(MedicineListActivity.this, medicine.getName() + " added to cart!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        Toast.makeText(MedicineListActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onSuccess(Void result) {
+                Toast.makeText(MedicineListActivity.this, medicine.getName() + " added to cart", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(MedicineListActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MedicineListActivity.this, "Failed to add to cart: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
