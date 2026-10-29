@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.example.project.models.CartItem;
 import com.example.project.models.CsvImportResult;
@@ -384,10 +385,11 @@ public class MediRepository {
                     db.setTransactionSuccessful();
                     postSuccess(callback, null);
                 } else {
-                    postError(callback, "Failed to save medicine: database insert returned -1");
+                    postError(callback, "database insert returned -1");
                 }
             } catch (Exception e) {
-                postError(callback, "Failed to save medicine: " + e.getMessage());
+                Log.e("MEDSAVE", "save failed", e);
+                postError(callback, e.getMessage());
             } finally {
                 db.endTransaction();
             }

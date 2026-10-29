@@ -2,12 +2,14 @@ package com.example.project.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
@@ -126,52 +128,74 @@ public class AddEditMedicineActivity extends AppCompatActivity {
     }
 
     private void saveMedicine() {
-        String name = etName.getText().toString().trim();
-        String generic = etGeneric.getText().toString().trim();
-        String priceStr = etPrice.getText().toString().trim();
-        String stockStr = etStock.getText().toString().trim();
-        String category = etCategory.getText().toString().trim();
-        String description = etDescription.getText().toString().trim();
-
-        if (name.isEmpty() || priceStr.isEmpty() || stockStr.isEmpty()) {
-            Toast.makeText(this, "Please fill in all required fields (Name, Price, Stock)", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        double price;
-        int stock;
         try {
-            price = Double.parseDouble(priceStr);
-            stock = Integer.parseInt(stockStr);
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Please enter valid numbers for Price and Stock", Toast.LENGTH_SHORT).show();
-            return;
+            String name = etName.getText().toString().trim();
+            String generic = etGeneric.getText().toString().trim();
+            String priceStr = etPrice.getText().toString().trim();
+            String stockStr = etStock.getText().toString().trim();
+            String category = etCategory.getText().toString().trim();
+            String description = etDescription.getText().toString().trim();
+
+            if (name.isEmpty() || priceStr.isEmpty() || stockStr.isEmpty()) {
+                Toast.makeText(this, "Please fill in all required fields (Name, Price, Stock)", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            double price;
+            int stock;
+            try {
+                price = Double.parseDouble(priceStr);
+                stock = Integer.parseInt(stockStr);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Please enter valid numbers for Price and Stock", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Medicine m = currentMedicine != null ? currentMedicine : new Medicine();
+            m.setName(name);
+            m.setGenericName(generic);
+            m.setPrice(price);
+            m.setStock(stock);
+            m.setCategory(category.isEmpty() ? "cat_analgesics" : category);
+            m.setDescription(description);
+            m.setActive(switchActive.isChecked());
+            m.setRequiresPrescription(switchRxRequired.isChecked());
+
+            btnSave.setEnabled(false);
+            repository.saveMedicine(m, new MediRepository.Callback<Void>() {
+                @Override
+                public void onSuccess(Void result) {
+                    btnSave.setEnabled(true);
+                    Toast.makeText(AddEditMedicineActivity.this, "Medicine record saved successfully!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onError(String error) {
+                    btnSave.setEnabled(true);
+                    Log.e("MEDSAVE", "save failed: " + error);
+                    showErrorDialog(error);
+                }
+            });
+        } catch (Exception e) {
+            btnSave.setEnabled(true);
+            Log.e("MEDSAVE", "save failed", e);
+            showErrorDialog(e.getMessage());
         }
+    }
 
-        Medicine m = currentMedicine != null ? currentMedicine : new Medicine();
-        m.setName(name);
-        m.setGenericName(generic);
-        m.setPrice(price);
-        m.setStock(stock);
-        m.setCategory(category.isEmpty() ? "cat_analgesics" : category);
-        m.setDescription(description);
-        m.setActive(switchActive.isChecked());
-        m.setRequiresPrescription(switchRxRequired.isChecked());
+    private void showErrorDialog(String errorMessage) {
+        TextView textView = new TextView(this);
+        textView.setText(errorMessage);
+        textView.setTextIsSelectable(true);
+        int padding = (int) (18 * getResources().getDisplayMetrics().density);
+        textView.setPadding(padding, padding, padding, padding);
+        textView.setTextSize(14f);
 
-        btnSave.setEnabled(false);
-        repository.saveMedicine(m, new MediRepository.Callback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                btnSave.setEnabled(true);
-                Toast.makeText(AddEditMedicineActivity.this, "Medicine record saved successfully!", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-
-            @Override
-            public void onError(String error) {
-                btnSave.setEnabled(true);
-                Toast.makeText(AddEditMedicineActivity.this, "Failed to save medicine: " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
+        new AlertDialog.Builder(this)
+                .setTitle("Save Failed")
+                .setView(textView)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
     }
 }
