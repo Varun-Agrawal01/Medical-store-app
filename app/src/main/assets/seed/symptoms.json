@@ -1,0 +1,165 @@
+{
+  "comment": "Demo data generated for a college project. Verify against official sources before any real use.",
+  "symptoms": [
+    {
+      "id": "sym_fever",
+      "name": "Fever",
+      "red_flag_advice": "Consult a physician immediately if body temperature exceeds 102°F or persists for more than 3 days."
+    },
+    {
+      "id": "sym_headache",
+      "name": "Headache",
+      "red_flag_advice": "Seek immediate emergency care if headache is sudden, explosive, or accompanied by confusion or stiff neck."
+    },
+    {
+      "id": "sym_cold",
+      "name": "Cold & Runny Nose",
+      "red_flag_advice": "Consult a doctor if nasal congestion is accompanied by severe facial swelling or persistent green discharge."
+    },
+    {
+      "id": "sym_dry_cough",
+      "name": "Dry Cough",
+      "red_flag_advice": "See a doctor if dry cough lasts more than 2 weeks, disrupts sleep severely, or causes chest tightness."
+    },
+    {
+      "id": "sym_wet_cough",
+      "name": "Wet Cough",
+      "red_flag_advice": "Consult a physician if phlegm is rusty, blood-stained, or accompanied by breathing difficulty."
+    },
+    {
+      "id": "sym_sore_throat",
+      "name": "Sore Throat",
+      "red_flag_advice": "Seek medical evaluation if severe throat pain makes swallowing fluids difficult or lasts beyond 5 days."
+    },
+    {
+      "id": "sym_acidity",
+      "name": "Acidity & Heartburn",
+      "red_flag_advice": "Consult a gastroenterologist if heartburn is accompanied by difficulty swallowing or radiating chest discomfort."
+    },
+    {
+      "id": "sym_indigestion",
+      "name": "Indigestion & Gas",
+      "red_flag_advice": "Seek urgent medical attention if abdominal discomfort radiates to the jaw, neck, or left arm."
+    },
+    {
+      "id": "sym_constipation",
+      "name": "Constipation",
+      "red_flag_advice": "Consult a doctor if constipation persists over 7 days or is accompanied by severe abdominal cramping and vomiting."
+    },
+    {
+      "id": "sym_diarrhoea",
+      "name": "Diarrhoea",
+      "red_flag_advice": "Seek immediate hospital care if stools contain blood or if signs of severe dehydration (sunken eyes, dizziness) appear."
+    },
+    {
+      "id": "sym_nausea",
+      "name": "Nausea & Vomiting",
+      "red_flag_advice": "Consult a doctor if you cannot retain fluids for over 24 hours, vomit dark coffee-ground material, or feel faint."
+    },
+    {
+      "id": "sym_body_pain",
+      "name": "Body Pain & Fatigue",
+      "red_flag_advice": "Consult a physician if generalised aches are accompanied by unexplained weight loss or sudden motor weakness."
+    },
+    {
+      "id": "sym_back_pain",
+      "name": "Back Pain",
+      "red_flag_advice": "Seek urgent care if back pain is associated with numbness in limbs, loss of bowel/bladder control, or fever."
+    },
+    {
+      "id": "sym_joint_pain",
+      "name": "Joint Pain & Arthritis",
+      "red_flag_advice": "Consult a rheumatologist if joints become red, hot, visibly swollen, or accompanied by morning stiffness over an hour."
+    },
+    {
+      "id": "sym_allergy",
+      "name": "Allergy & Sneezing",
+      "red_flag_advice": "Seek emergency medical assistance immediately if facial swelling, lip numbness, or breathing wheezes occur."
+    },
+    {
+      "id": "sym_itching",
+      "name": "Itching & Pruritus",
+      "red_flag_advice": "Consult a dermatologist if itching is full-body, prevents sleep, or is accompanied by jaundice (yellowing skin/eyes)."
+    },
+    {
+      "id": "sym_skin_rash",
+      "name": "Skin Rash & Eczema",
+      "red_flag_advice": "Seek immediate attention if rash spreads rapidly, forms blisters, or is accompanied by fever or peeling skin."
+    },
+    {
+      "id": "sym_insomnia",
+      "name": "Insomnia & Sleeplessness",
+      "red_flag_advice": "Consult a sleep specialist if chronic insomnia impairs daytime cognitive function or causes memory impairment."
+    },
+    {
+      "id": "sym_stress",
+      "name": "Anxiety & Stress",
+      "red_flag_advice": "Seek mental healthcare if anxiety induces severe palpitations, unmanageable panic episodes, or depressive thoughts."
+    },
+    {
+      "id": "sym_toothache",
+      "name": "Toothache & Gum Pain",
+      "red_flag_advice": "Consult a dental surgeon urgently if swelling extends to the cheek, jawline, or eye socket with fever."
+    },
+    {
+      "id": "sym_menstrual_cramps",
+      "name": "Menstrual Cramps",
+      "red_flag_advice": "Consult a gynaecologist if dysmenorrhea is debilitating, prevents daily activities, or accompanied by abnormal heavy bleeding."
+    },
+    {
+      "id": "sym_minor_cuts",
+      "name": "Minor Cuts & Wounds",
+      "red_flag_advice": "Seek medical dressing if wound is deep, gaping, bleeding heavily, or caused by rusty metal (tetanus risk)."
+    },
+    {
+      "id": "sym_eye_irritation",
+      "name": "Eye Irritation & Redness",
+      "red_flag_advice": "Consult an ophthalmologist promptly if you experience severe eye pain, foreign body sensation, or vision blurring."
+    },
+    {
+      "id": "sym_vitamin_deficiency",
+      "name": "Vitamin Deficiency",
+      "red_flag_advice": "Get a comprehensive blood workup and consult a physician if fatigue is persistent, with brittle nails or mouth sores."
+    },
+    {
+      "id": "sym_fungal_infection",
+      "name": "Fungal Infection",
+      "red_flag_advice": "Consult a doctor if ringworm or fungal patches spread rapidly or do not respond to 2 weeks of topical antifungal therapy."
+    },
+    {
+      "id": "sym_mouth_ulcers",
+      "name": "Mouth Ulcers",
+      "red_flag_advice": "See a dentist or ENT specialist if oral ulcers do not heal within 14 days or bleed without provocation."
+    },
+    {
+      "id": "sym_muscle_cramps",
+      "name": "Muscle Spasms & Cramps",
+      "red_flag_advice": "Seek medical evaluation if muscle spasms are accompanied by extreme dehydration, tingling, or heat stroke symptoms."
+    },
+    {
+      "id": "sym_motion_sickness",
+      "name": "Motion Sickness",
+      "red_flag_advice": "Consult a physician if dizziness or vestibular nausea persists long after travel concludes."
+    },
+    {
+      "id": "sym_dry_eyes",
+      "name": "Dry Eyes & Strain",
+      "red_flag_advice": "Consult an eye specialist if gritty ocular dryness causes severe light sensitivity or corneal abrasions."
+    },
+    {
+      "id": "sym_ear_pain",
+      "name": "Ear Pain & Blockage",
+      "red_flag_advice": "Consult an ENT doctor if earache is accompanied by foul-smelling discharge, sudden hearing reduction, or dizziness."
+    },
+    {
+      "id": "sym_piles",
+      "name": "Piles & Haemorrhoids",
+      "red_flag_advice": "Consult a surgeon immediately if you experience significant bright red rectal bleeding or severe throbbing perianal pain."
+    },
+    {
+      "id": "sym_hair_fall",
+      "name": "Hair Fall & Dandruff",
+      "red_flag_advice": "Consult a dermatologist if hair shedding is patchy (alopecia areata) or scalp is inflamed, weeping, and tender."
+    }
+  ]
+}
