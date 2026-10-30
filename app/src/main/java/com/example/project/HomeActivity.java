@@ -236,5 +236,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         viewModel.loadUserData();
+        viewModel.loadMedicines();
     }
 }

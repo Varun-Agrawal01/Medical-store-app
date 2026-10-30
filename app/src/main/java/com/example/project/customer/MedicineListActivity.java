@@ -201,4 +201,12 @@ public class MedicineListActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (viewModel != null) {
+            viewModel.refresh();
+        }
+    }
 }

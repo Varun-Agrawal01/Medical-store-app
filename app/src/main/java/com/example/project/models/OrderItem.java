@@ -5,16 +5,22 @@ public class OrderItem {
     private String medicineName;
     private double unitPrice;
     private int quantity;
+    private String batchNo;
 
     public OrderItem() {
         // Default constructor
     }
 
     public OrderItem(String medicineId, String medicineName, double unitPrice, int quantity) {
+        this(medicineId, medicineName, unitPrice, quantity, "");
+    }
+
+    public OrderItem(String medicineId, String medicineName, double unitPrice, int quantity, String batchNo) {
         this.medicineId = medicineId;
         this.medicineName = medicineName;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
+        this.batchNo = batchNo;
     }
 
     public String getMedicineId() {
@@ -49,8 +55,15 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
+    }
+
     public double getItemTotal() {
         return unitPrice * quantity;
     }
 }
-

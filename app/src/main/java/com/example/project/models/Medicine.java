@@ -1,5 +1,8 @@
 package com.example.project.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Medicine {
     private String id;
     private String name;
@@ -22,6 +25,8 @@ public class Medicine {
     private int minAge;
     private int avoidInPregnancy;
     private int matchedSymptomsCount;
+    /** Transient: symptom IDs selected in the admin Add/Edit form. Not persisted as a column. */
+    private List<String> selectedSymptomIds = new ArrayList<>();
     private long createdAt;
     private long updatedAt;
 
@@ -230,6 +235,14 @@ public class Medicine {
 
     public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<String> getSelectedSymptomIds() {
+        return selectedSymptomIds != null ? selectedSymptomIds : new ArrayList<>();
+    }
+
+    public void setSelectedSymptomIds(List<String> selectedSymptomIds) {
+        this.selectedSymptomIds = selectedSymptomIds != null ? selectedSymptomIds : new ArrayList<>();
     }
 
     public boolean isAvailable() {

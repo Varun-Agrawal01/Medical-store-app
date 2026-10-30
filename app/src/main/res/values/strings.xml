@@ -57,4 +57,7 @@
     <string name="btn_retry">Retry</string>
     <string name="lbl_popular_symptoms">Browse by Symptom</string>
     <string name="title_order_history">My Order History</string>
+    <string name="back">Back</string>
+    <string name="add_edit_medicine_title">Add / Edit Medicine</string>
+    <string name="medicine_name_label">Medicine Name</string>
 </resources>

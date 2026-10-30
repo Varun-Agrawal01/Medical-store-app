@@ -3,15 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project">
 
+        <!-- Launcher Activity: Only activity with exported="true" -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">
@@ -26,23 +25,23 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".auth.RegisterActivity" />
-        <activity android:name=".auth.AdminLoginActivity" />
-        <activity android:name=".customer.ProfileActivity" />
-        <activity android:name=".customer.EditProfileActivity" />
-        <activity android:name=".customer.ChangePasswordActivity" />
-        <activity android:name=".customer.SymptomsActivity" />
-        <activity android:name=".customer.MedicineListActivity" />
-        <activity android:name=".customer.MedicineDetailActivity" />
-        <activity android:name=".customer.CartActivity" />
-        <activity android:name=".customer.CheckoutActivity" />
-        <activity android:name=".customer.BillActivity" />
-        <activity android:name=".customer.OrderHistoryActivity" />
-        <activity android:name=".admin.AdminDashboardActivity" />
-        <activity android:name=".admin.InventoryActivity" />
-        <activity android:name=".admin.AddEditMedicineActivity" />
-        <activity android:name=".admin.AdminOrdersActivity" />
+        <activity android:name=".HomeActivity" android:exported="false" />
+        <activity android:name=".auth.RegisterActivity" android:exported="false" />
+        <activity android:name=".auth.AdminLoginActivity" android:exported="false" />
+        <activity android:name=".customer.ProfileActivity" android:exported="false" />
+        <activity android:name=".customer.EditProfileActivity" android:exported="false" />
+        <activity android:name=".customer.ChangePasswordActivity" android:exported="false" />
+        <activity android:name=".customer.SymptomsActivity" android:exported="false" />
+        <activity android:name=".customer.MedicineListActivity" android:exported="false" />
+        <activity android:name=".customer.MedicineDetailActivity" android:exported="false" />
+        <activity android:name=".customer.CartActivity" android:exported="false" />
+        <activity android:name=".customer.CheckoutActivity" android:exported="false" />
+        <activity android:name=".customer.BillActivity" android:exported="false" />
+        <activity android:name=".customer.OrderHistoryActivity" android:exported="false" />
+        <activity android:name=".admin.AdminDashboardActivity" android:exported="false" />
+        <activity android:name=".admin.InventoryActivity" android:exported="false" />
+        <activity android:name=".admin.AddEditMedicineActivity" android:exported="false" />
+        <activity android:name=".admin.AdminOrdersActivity" android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

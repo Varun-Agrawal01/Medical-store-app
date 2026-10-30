@@ -23,7 +23,7 @@
                 android:id="@+id/imageView"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/back_arrow"
+                android:src="@drawable/ic_arrow_back"
                 android:contentDescription="Back" />
 
             <TextView
