@@ -10,21 +10,24 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.project.R;
 import com.example.project.admin.AdminDashboardActivity;
-import com.example.project.data.FirestoreRepository;
+import com.example.project.data.MediRepository;
 import com.example.project.models.User;
+import com.example.project.utils.SessionManager;
 
 public class AdminLoginActivity extends AppCompatActivity {
 
     private EditText etShopkeeperId, etAdminPass;
     private Button btnAdminLogin, btnBackToCustomerLogin;
-    private FirestoreRepository repository;
+    private MediRepository repository;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_login);
 
-        repository = FirestoreRepository.getInstance(this);
+        repository = MediRepository.getInstance(this);
+        sessionManager = new SessionManager(this);
 
         etShopkeeperId = findViewById(R.id.editTextText7);
         etAdminPass = findViewById(R.id.editTextText8);
@@ -32,26 +35,27 @@ public class AdminLoginActivity extends AppCompatActivity {
         btnBackToCustomerLogin = findViewById(R.id.btnBackToCustomerLogin);
 
         btnBackToCustomerLogin.setOnClickListener(v -> finish());
-
         btnAdminLogin.setOnClickListener(v -> performAdminLogin());
     }
 
     private void performAdminLogin() {
         String shopkeeperId = etShopkeeperId.getText().toString().trim();
-        String password = etAdminPass.getText().toString().trim();
+        String password = etAdminPass.getText().toString();
 
         if (shopkeeperId.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please enter Shopkeeper ID and password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter Admin Email or ID and password", Toast.LENGTH_SHORT).show();
             return;
         }
 
         btnAdminLogin.setEnabled(false);
-        repository.adminLogin(shopkeeperId, password, new FirestoreRepository.Callback<User>() {
+        repository.adminLogin(shopkeeperId, password, new MediRepository.Callback<User>() {
             @Override
             public void onSuccess(User adminUser) {
                 btnAdminLogin.setEnabled(true);
-                Toast.makeText(AdminLoginActivity.class.getCanonicalName() != null ? AdminLoginActivity.this : null, "Admin Login Successful!", Toast.LENGTH_SHORT).show();
+                sessionManager.saveUserId(adminUser.getId());
+                Toast.makeText(AdminLoginActivity.this, "Admin Login Successful!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(AdminLoginActivity.this, AdminDashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }

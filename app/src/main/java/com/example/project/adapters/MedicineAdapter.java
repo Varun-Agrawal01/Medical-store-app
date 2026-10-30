@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
@@ -16,8 +18,12 @@ import com.example.project.models.Medicine;
 import com.example.project.utils.FormatUtils;
 
 import java.util.List;
+import java.util.Objects;
 
-public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHolder> {
+/**
+ * ListAdapter with DiffUtil for high performance medicine list rendering.
+ */
+public class MedicineAdapter extends ListAdapter<Medicine, MedicineAdapter.ViewHolder> {
 
     public interface OnMedicineClickListener {
         void onMedicineClick(Medicine medicine);
@@ -25,16 +31,41 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHo
         void onEditClick(Medicine medicine);
     }
 
-    private final Context context;
-    private final List<Medicine> medicineList;
-    private final OnMedicineClickListener listener;
-    private final boolean isAdminMode;
+    private static final DiffUtil.ItemCallback<Medicine> DIFF_CALLBACK = new DiffUtil.ItemCallback<Medicine>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Medicine oldItem, @NonNull Medicine newItem) {
+            return Objects.equals(oldItem.getId(), newItem.getId());
+        }
 
-    public MedicineAdapter(Context context, List<Medicine> medicineList, boolean isAdminMode, OnMedicineClickListener listener) {
+        @Override
+        public boolean areContentsTheSame(@NonNull Medicine oldItem, @NonNull Medicine newItem) {
+            return oldItem.getStock() == newItem.getStock() &&
+                    oldItem.getPrice() == newItem.getPrice() &&
+                    oldItem.isActive() == newItem.isActive() &&
+                    oldItem.getMatchedSymptomsCount() == newItem.getMatchedSymptomsCount() &&
+                    Objects.equals(oldItem.getName(), newItem.getName());
+        }
+    };
+
+    private final Context context;
+    private final boolean isAdminMode;
+    private final OnMedicineClickListener listener;
+
+    public MedicineAdapter(Context context, boolean isAdminMode, OnMedicineClickListener listener) {
+        super(DIFF_CALLBACK);
         this.context = context;
-        this.medicineList = medicineList;
         this.isAdminMode = isAdminMode;
         this.listener = listener;
+    }
+
+    public MedicineAdapter(Context context, List<Medicine> initialList, boolean isAdminMode, OnMedicineClickListener listener) {
+        super(DIFF_CALLBACK);
+        this.context = context;
+        this.isAdminMode = isAdminMode;
+        this.listener = listener;
+        if (initialList != null) {
+            submitList(initialList);
+        }
     }
 
     @NonNull
@@ -46,7 +77,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Medicine med = medicineList.get(position);
+        Medicine med = getItem(position);
         holder.tvName.setText(med.getName());
         holder.tvGeneric.setText(med.getGenericName() != null ? med.getGenericName() : "");
         holder.tvPrice.setText(FormatUtils.formatPrice(med.getPrice()));
@@ -55,6 +86,13 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHo
             holder.tvRxTag.setVisibility(View.VISIBLE);
         } else {
             holder.tvRxTag.setVisibility(View.GONE);
+        }
+
+        if (med.getMatchedSymptomsCount() > 0) {
+            holder.tvMatchedCount.setVisibility(View.VISIBLE);
+            holder.tvMatchedCount.setText(context.getString(R.string.matched_symptoms_badge, med.getMatchedSymptomsCount()));
+        } else {
+            holder.tvMatchedCount.setVisibility(View.GONE);
         }
 
         if (!med.isActive()) {
@@ -89,13 +127,8 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHo
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return medicineList != null ? medicineList.size() : 0;
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvGeneric, tvPrice, tvStockStatus, tvRxTag;
+        TextView tvName, tvGeneric, tvPrice, tvStockStatus, tvRxTag, tvMatchedCount;
         Button btnAction;
 
         public ViewHolder(@NonNull View itemView) {
@@ -105,6 +138,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHo
             tvPrice = itemView.findViewById(R.id.tvPrice);
             tvStockStatus = itemView.findViewById(R.id.tvStockStatus);
             tvRxTag = itemView.findViewById(R.id.tvRxTag);
+            tvMatchedCount = itemView.findViewById(R.id.tvMatchedSymptomsCount);
             btnAction = itemView.findViewById(R.id.btnAction);
         }
     }

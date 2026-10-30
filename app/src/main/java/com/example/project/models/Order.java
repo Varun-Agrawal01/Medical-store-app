@@ -19,7 +19,7 @@ public class Order {
     private boolean stockDeducted;
 
     public Order() {
-        // Required for Firestore
+        // Default constructor
         this.status = "Pending";
         this.stockDeducted = true;
     }
@@ -147,3 +147,4 @@ public class Order {
         this.stockDeducted = stockDeducted;
     }
 }
+

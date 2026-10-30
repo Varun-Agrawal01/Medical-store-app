@@ -8,7 +8,7 @@ public class CartItem {
     private boolean requiresPrescription;
 
     public CartItem() {
-        // Required for Firestore
+        // Default constructor
     }
 
     public CartItem(String medicineId, String medicineName, double price, int quantity, boolean requiresPrescription) {
@@ -63,3 +63,4 @@ public class CartItem {
         return price * quantity;
     }
 }
+

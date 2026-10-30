@@ -1,0 +1,131 @@
+{
+  "comment": "Demo data generated for a college project. Verify against official sources before any real use.",
+  "categories": [
+    {
+      "id": "cat_analgesics",
+      "name": "Analgesics & Pain Relief",
+      "description": "Relief from headaches, muscular pain, and joint aches.",
+      "icon_res_name": "ic_pain"
+    },
+    {
+      "id": "cat_antipyretics",
+      "name": "Antipyretics (Fever)",
+      "description": "Medications to bring down fever and elevated body temperature.",
+      "icon_res_name": "ic_fever"
+    },
+    {
+      "id": "cat_antacids",
+      "name": "Antacids & Digestion",
+      "description": "Quick relief from acidity, heartburn, bloating, and indigestion.",
+      "icon_res_name": "ic_digest"
+    },
+    {
+      "id": "cat_antihistamines",
+      "name": "Antihistamines & Allergy",
+      "description": "Treating runny nose, sneezing, itching, and allergic rhinitis.",
+      "icon_res_name": "ic_allergy"
+    },
+    {
+      "id": "cat_cough_cold",
+      "name": "Cough & Cold",
+      "description": "Syrups and lozenges for dry, wet, and chesty coughs.",
+      "icon_res_name": "ic_cough"
+    },
+    {
+      "id": "cat_antibiotics",
+      "name": "Antibiotics & Anti-infectives",
+      "description": "Schedule H prescription antibacterial and antimicrobial agents.",
+      "icon_res_name": "ic_antibiotic"
+    },
+    {
+      "id": "cat_vitamins",
+      "name": "Vitamins & Supplements",
+      "description": "Multivitamins, zinc, iron, calcium, and dietary supplements.",
+      "icon_res_name": "ic_vitamins"
+    },
+    {
+      "id": "cat_diabetes",
+      "name": "Diabetes Care",
+      "description": "Oral hypoglycemics and blood glucose regulation drugs.",
+      "icon_res_name": "ic_diabetes"
+    },
+    {
+      "id": "cat_cardiac_bp",
+      "name": "Blood Pressure & Heart",
+      "description": "Anti-hypertensive and cardiovascular wellness medicines.",
+      "icon_res_name": "ic_cardiac"
+    },
+    {
+      "id": "cat_dermatology",
+      "name": "Skin Care & Dermatology",
+      "description": "Topical ointments, antifungal creams, and rash lotions.",
+      "icon_res_name": "ic_skin"
+    },
+    {
+      "id": "cat_eye_ear",
+      "name": "Eye & Ear Care",
+      "description": "Lubricating, antibiotic, and soothing drops for ocular and otic care.",
+      "icon_res_name": "ic_eye"
+    },
+    {
+      "id": "cat_first_aid",
+      "name": "First Aid & Antiseptics",
+      "description": "Disinfectants, povidone iodine, bandages, and wound sprays.",
+      "icon_res_name": "ic_firstaid"
+    },
+    {
+      "id": "cat_women_health",
+      "name": "Women's Health",
+      "description": "Gynaecological wellness, period pain relief, and iron tonics.",
+      "icon_res_name": "ic_women"
+    },
+    {
+      "id": "cat_baby_care",
+      "name": "Baby & Child Health",
+      "description": "Paediatric drops, colic relief, and infant gripe water.",
+      "icon_res_name": "ic_baby"
+    },
+    {
+      "id": "cat_mental_wellness",
+      "name": "Mental Wellness & Stress",
+      "description": "Herbal adaptogens, calmative formulas, and mild sleep aids.",
+      "icon_res_name": "ic_brain"
+    },
+    {
+      "id": "cat_oral_care",
+      "name": "Dental & Oral Care",
+      "description": "Antiseptic mouthwashes, gum paints, and toothache analgesics.",
+      "icon_res_name": "ic_dental"
+    },
+    {
+      "id": "cat_ortho_joint",
+      "name": "Joint & Bone Care",
+      "description": "Calcium D3 tablets, pain relief gels, and cartilage support.",
+      "icon_res_name": "ic_bone"
+    },
+    {
+      "id": "cat_gastro_laxatives",
+      "name": "Gastrointestinal & Laxatives",
+      "description": "Stool softeners, isabgol husk, and anti-diarrheal agents.",
+      "icon_res_name": "ic_gastro"
+    },
+    {
+      "id": "cat_immunity_herbal",
+      "name": "Immunity & Herbal Wellness",
+      "description": "Traditional Ayurvedic extracts, chyawanprash, and immunity boosters.",
+      "icon_res_name": "ic_ayur"
+    },
+    {
+      "id": "cat_respiratory",
+      "name": "Respiratory & Inhalers",
+      "description": "Bronchodilators, vapor capsules, and inhaler solutions.",
+      "icon_res_name": "ic_lungs"
+    },
+    {
+      "id": "cat_urinary_kidney",
+      "name": "Kidney & Urinary Care",
+      "description": "Urinary alkalizers, kidney stone herbal syrups, and UTI aids.",
+      "icon_res_name": "ic_kidney"
+    }
+  ]
+}

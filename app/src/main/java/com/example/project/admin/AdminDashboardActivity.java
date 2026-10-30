@@ -11,9 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.project.MainActivity;
 import com.example.project.R;
-import com.example.project.data.FirestoreRepository;
+import com.example.project.auth.AdminLoginActivity;
+import com.example.project.data.MediRepository;
 import com.example.project.models.Medicine;
 import com.example.project.models.Order;
+import com.example.project.models.User;
+import com.example.project.utils.SessionManager;
 
 import java.util.List;
 
@@ -22,14 +25,38 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private TextView tvActiveCount, tvLowStockCount, tvOutOfStockCount, tvPendingOrdersCount;
     private Button btnManageInventory, btnViewOrders;
     private ImageButton btnAdminLogout;
-    private FirestoreRepository repository;
+    private MediRepository repository;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.admin_dashboard);
 
-        repository = FirestoreRepository.getInstance(this);
+        // Role Guard: redirects to admin login if current session user is not an admin
+        sessionManager = new SessionManager(this);
+        repository = MediRepository.getInstance(this);
+
+        String currentUserId = sessionManager.getUserId();
+        if (currentUserId == null) {
+            redirectToLogin();
+            return;
+        }
+
+        repository.getUserById(currentUserId, new MediRepository.Callback<User>() {
+            @Override
+            public void onSuccess(User user) {
+                if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
+                    redirectToLogin();
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                redirectToLogin();
+            }
+        });
+
+        setContentView(R.layout.admin_dashboard);
 
         tvActiveCount = findViewById(R.id.tvActiveCount);
         tvLowStockCount = findViewById(R.id.tvLowStockCount);
@@ -51,12 +78,20 @@ public class AdminDashboardActivity extends AppCompatActivity {
         });
 
         btnAdminLogout.setOnClickListener(v -> {
-            repository.logout();
+            sessionManager.clear();
             Toast.makeText(this, "Admin Logged Out", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(AdminDashboardActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         });
+    }
+
+    private void redirectToLogin() {
+        Intent intent = new Intent(this, AdminLoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -66,7 +101,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void loadDashboardStats() {
-        repository.getMedicines(new FirestoreRepository.Callback<List<Medicine>>() {
+        repository.getMedicines(new MediRepository.Callback<List<Medicine>>() {
             @Override
             public void onSuccess(List<Medicine> medicines) {
                 int active = 0;
@@ -86,11 +121,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
             @Override
             public void onError(String error) {
-                // Ignore silent stats error
+                // Silent
             }
         });
 
-        repository.getAllOrders(new FirestoreRepository.Callback<List<Order>>() {
+        repository.getAllOrders(new MediRepository.Callback<List<Order>>() {
             @Override
             public void onSuccess(List<Order> orders) {
                 int pending = 0;
@@ -104,7 +139,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
             @Override
             public void onError(String error) {
-                // Ignore silent stats error
+                // Silent
             }
         });
     }

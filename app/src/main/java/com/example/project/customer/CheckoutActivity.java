@@ -11,11 +11,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.project.R;
-import com.example.project.data.FirestoreRepository;
+import com.example.project.data.MediRepository;
 import com.example.project.models.CartItem;
 import com.example.project.models.Order;
 import com.example.project.models.User;
 import com.example.project.utils.FormatUtils;
+import com.example.project.utils.PricingUtils;
+import com.example.project.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +29,19 @@ public class CheckoutActivity extends AppCompatActivity {
     private Button btnPlaceOrder;
     private ImageButton btnBack;
 
-    private FirestoreRepository repository;
-    private User currentUser;
-    private List<CartItem> cartItems = new ArrayList<>();
+    private MediRepository repository;
+    private SessionManager sessionManager;
+    private String currentUserId;
+    private final List<CartItem> cartItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
 
-        repository = FirestoreRepository.getInstance(this);
-        currentUser = repository.getCurrentUser();
+        repository = MediRepository.getInstance(this);
+        sessionManager = new SessionManager(this);
+        currentUserId = sessionManager.getUserId() != null ? sessionManager.getUserId() : "guest";
 
         btnBack = findViewById(R.id.btnBackCheckout);
         etName = findViewById(R.id.etCheckoutName);
@@ -51,19 +55,30 @@ public class CheckoutActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
 
-        if (currentUser != null) {
-            if (currentUser.getName() != null) etName.setText(currentUser.getName());
-            if (currentUser.getPhone() != null) etPhone.setText(currentUser.getPhone());
+        // Pre-fill full user row from DB
+        if (sessionManager.getUserId() != null) {
+            repository.getUserById(sessionManager.getUserId(), new MediRepository.Callback<User>() {
+                @Override
+                public void onSuccess(User user) {
+                    if (user != null) {
+                        if (user.getName() != null) etName.setText(user.getName());
+                        if (user.getPhone() != null) etPhone.setText(user.getPhone());
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+                    // Non-fatal
+                }
+            });
         }
 
         btnPlaceOrder.setOnClickListener(v -> placeOrder());
-
         loadCartSummary();
     }
 
     private void loadCartSummary() {
-        String userId = currentUser != null ? currentUser.getUid() : "guest";
-        repository.getCart(userId, new FirestoreRepository.Callback<List<CartItem>>() {
+        repository.getCart(currentUserId, new MediRepository.Callback<List<CartItem>>() {
             @Override
             public void onSuccess(List<CartItem> items) {
                 if (items.isEmpty()) {
@@ -80,8 +95,8 @@ public class CheckoutActivity extends AppCompatActivity {
                     subtotal += ci.getItemTotal();
                 }
 
-                double deliveryFee = subtotal > 500.0 || subtotal == 0 ? 0.0 : 50.0;
-                double total = subtotal + deliveryFee;
+                double deliveryFee = PricingUtils.calculateDeliveryFee(subtotal);
+                double total = PricingUtils.calculateTotal(subtotal, deliveryFee);
 
                 tvSubtotal.setText(FormatUtils.formatPrice(subtotal));
                 tvDeliveryFee.setText(FormatUtils.formatPrice(deliveryFee));
@@ -102,26 +117,26 @@ public class CheckoutActivity extends AppCompatActivity {
         String address = etAddress.getText().toString().trim();
 
         if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
-            Toast.makeText(this, "Please enter complete delivery details!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter all delivery details", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (phone.length() < 10) {
-            Toast.makeText(this, "Please enter a valid 10-digit phone number", Toast.LENGTH_SHORT).show();
+        if (!phone.matches("^[6-9][0-9]{9}$")) {
+            Toast.makeText(this, getString(R.string.err_invalid_phone), Toast.LENGTH_SHORT).show();
             return;
         }
 
         btnPlaceOrder.setEnabled(false);
-        String userId = currentUser != null ? currentUser.getUid() : "guest";
+        btnPlaceOrder.setText("Processing Order...");
 
-        repository.placeOrderTransaction(userId, name, phone, address, cartItems, new FirestoreRepository.Callback<Order>() {
+        repository.placeOrderTransaction(currentUserId, name, phone, address, cartItems, new MediRepository.Callback<Order>() {
             @Override
             public void onSuccess(Order createdOrder) {
                 btnPlaceOrder.setEnabled(true);
-                Toast.makeText(CheckoutActivity.this, "Order Placed Successfully!", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(CheckoutActivity.this, "Order placed successfully!", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(CheckoutActivity.this, BillActivity.class);
                 intent.putExtra("orderId", createdOrder.getOrderId());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             }
@@ -129,7 +144,8 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 btnPlaceOrder.setEnabled(true);
-                Toast.makeText(CheckoutActivity.this, "Checkout Failed: " + error, Toast.LENGTH_LONG).show();
+                btnPlaceOrder.setText("Place Order");
+                Toast.makeText(CheckoutActivity.this, "Order failed: " + error, Toast.LENGTH_LONG).show();
             }
         });
     }

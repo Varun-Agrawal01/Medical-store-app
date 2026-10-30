@@ -1,15 +1,35 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Gradle files
+.gradle/
+build/
+app/build/
+
+# Local configuration file (contains path to Android SDK)
 local.properties
+
+# Log and crash files
+*.log
+hs_err_pid*
+replay_pid*
+
+# Package files
+*.apk
+*.aab
+
+# Android Studio / IntelliJ IDEA
+.idea/*
+!.idea/runConfigurations/
+*.iml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/caches/
+.idea/libraries/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Android Profiler captures
+/captures/
+captures/
+.externalNativeBuild/
+.cxx/

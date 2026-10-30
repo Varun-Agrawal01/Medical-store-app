@@ -1,0 +1,1065 @@
+{
+  "comment": "Demo data generated for a college project. Verify against official sources before any real use.",
+  "medicine_symptoms": [
+    {
+      "medicine_id": "med_1001",
+      "symptom_id": "sym_fever"
+    },
+    {
+      "medicine_id": "med_1002",
+      "symptom_id": "sym_fever"
+    },
+    {
+      "medicine_id": "med_1003",
+      "symptom_id": "sym_fever"
+    },
+    {
+      "medicine_id": "med_1004",
+      "symptom_id": "sym_fever"
+    },
+    {
+      "medicine_id": "med_1015",
+      "symptom_id": "sym_fever"
+    },
+    {
+      "medicine_id": "med_1035",
+      "symptom_id": "sym_fever"
+    },
+    {
+      "medicine_id": "med_1036",
+      "symptom_id": "sym_fever"
+    },
+    {
+      "medicine_id": "med_1041",
+      "symptom_id": "sym_fever"
+    },
+    {
+      "medicine_id": "med_1042",
+      "symptom_id": "sym_fever"
+    },
+    {
+      "medicine_id": "med_1043",
+      "symptom_id": "sym_fever"
+    },
+    {
+      "medicine_id": "med_1001",
+      "symptom_id": "sym_headache"
+    },
+    {
+      "medicine_id": "med_1002",
+      "symptom_id": "sym_headache"
+    },
+    {
+      "medicine_id": "med_1003",
+      "symptom_id": "sym_headache"
+    },
+    {
+      "medicine_id": "med_1005",
+      "symptom_id": "sym_headache"
+    },
+    {
+      "medicine_id": "med_1010",
+      "symptom_id": "sym_headache"
+    },
+    {
+      "medicine_id": "med_1011",
+      "symptom_id": "sym_headache"
+    },
+    {
+      "medicine_id": "med_1035",
+      "symptom_id": "sym_headache"
+    },
+    {
+      "medicine_id": "med_1036",
+      "symptom_id": "sym_headache"
+    },
+    {
+      "medicine_id": "med_1038",
+      "symptom_id": "sym_headache"
+    },
+    {
+      "medicine_id": "med_1039",
+      "symptom_id": "sym_headache"
+    },
+    {
+      "medicine_id": "med_1030",
+      "symptom_id": "sym_cold"
+    },
+    {
+      "medicine_id": "med_1031",
+      "symptom_id": "sym_cold"
+    },
+    {
+      "medicine_id": "med_1033",
+      "symptom_id": "sym_cold"
+    },
+    {
+      "medicine_id": "med_1034",
+      "symptom_id": "sym_cold"
+    },
+    {
+      "medicine_id": "med_1035",
+      "symptom_id": "sym_cold"
+    },
+    {
+      "medicine_id": "med_1036",
+      "symptom_id": "sym_cold"
+    },
+    {
+      "medicine_id": "med_1038",
+      "symptom_id": "sym_cold"
+    },
+    {
+      "medicine_id": "med_1039",
+      "symptom_id": "sym_cold"
+    },
+    {
+      "medicine_id": "med_1050",
+      "symptom_id": "sym_cold"
+    },
+    {
+      "medicine_id": "med_1090",
+      "symptom_id": "sym_cold"
+    },
+    {
+      "medicine_id": "med_1032",
+      "symptom_id": "sym_dry_cough"
+    },
+    {
+      "medicine_id": "med_1033",
+      "symptom_id": "sym_dry_cough"
+    },
+    {
+      "medicine_id": "med_1037",
+      "symptom_id": "sym_dry_cough"
+    },
+    {
+      "medicine_id": "med_1040",
+      "symptom_id": "sym_dry_cough"
+    },
+    {
+      "medicine_id": "med_1189",
+      "symptom_id": "sym_dry_cough"
+    },
+    {
+      "medicine_id": "med_1190",
+      "symptom_id": "sym_dry_cough"
+    },
+    {
+      "medicine_id": "med_1191",
+      "symptom_id": "sym_dry_cough"
+    },
+    {
+      "medicine_id": "med_1210",
+      "symptom_id": "sym_dry_cough"
+    },
+    {
+      "medicine_id": "med_1211",
+      "symptom_id": "sym_dry_cough"
+    },
+    {
+      "medicine_id": "med_1212",
+      "symptom_id": "sym_dry_cough"
+    },
+    {
+      "medicine_id": "med_1034",
+      "symptom_id": "sym_wet_cough"
+    },
+    {
+      "medicine_id": "med_1042",
+      "symptom_id": "sym_wet_cough"
+    },
+    {
+      "medicine_id": "med_1043",
+      "symptom_id": "sym_wet_cough"
+    },
+    {
+      "medicine_id": "med_1207",
+      "symptom_id": "sym_wet_cough"
+    },
+    {
+      "medicine_id": "med_1208",
+      "symptom_id": "sym_wet_cough"
+    },
+    {
+      "medicine_id": "med_1209",
+      "symptom_id": "sym_wet_cough"
+    },
+    {
+      "medicine_id": "med_1213",
+      "symptom_id": "sym_wet_cough"
+    },
+    {
+      "medicine_id": "med_1214",
+      "symptom_id": "sym_wet_cough"
+    },
+    {
+      "medicine_id": "med_1215",
+      "symptom_id": "sym_wet_cough"
+    },
+    {
+      "medicine_id": "med_1219",
+      "symptom_id": "sym_wet_cough"
+    },
+    {
+      "medicine_id": "med_1032",
+      "symptom_id": "sym_sore_throat"
+    },
+    {
+      "medicine_id": "med_1033",
+      "symptom_id": "sym_sore_throat"
+    },
+    {
+      "medicine_id": "med_1037",
+      "symptom_id": "sym_sore_throat"
+    },
+    {
+      "medicine_id": "med_1040",
+      "symptom_id": "sym_sore_throat"
+    },
+    {
+      "medicine_id": "med_1041",
+      "symptom_id": "sym_sore_throat"
+    },
+    {
+      "medicine_id": "med_1042",
+      "symptom_id": "sym_sore_throat"
+    },
+    {
+      "medicine_id": "med_1210",
+      "symptom_id": "sym_sore_throat"
+    },
+    {
+      "medicine_id": "med_1211",
+      "symptom_id": "sym_sore_throat"
+    },
+    {
+      "medicine_id": "med_1212",
+      "symptom_id": "sym_sore_throat"
+    },
+    {
+      "medicine_id": "med_1213",
+      "symptom_id": "sym_sore_throat"
+    },
+    {
+      "medicine_id": "med_1016",
+      "symptom_id": "sym_acidity"
+    },
+    {
+      "medicine_id": "med_1017",
+      "symptom_id": "sym_acidity"
+    },
+    {
+      "medicine_id": "med_1018",
+      "symptom_id": "sym_acidity"
+    },
+    {
+      "medicine_id": "med_1019",
+      "symptom_id": "sym_acidity"
+    },
+    {
+      "medicine_id": "med_1020",
+      "symptom_id": "sym_acidity"
+    },
+    {
+      "medicine_id": "med_1021",
+      "symptom_id": "sym_acidity"
+    },
+    {
+      "medicine_id": "med_1022",
+      "symptom_id": "sym_acidity"
+    },
+    {
+      "medicine_id": "med_1085",
+      "symptom_id": "sym_acidity"
+    },
+    {
+      "medicine_id": "med_1088",
+      "symptom_id": "sym_acidity"
+    },
+    {
+      "medicine_id": "med_1089",
+      "symptom_id": "sym_acidity"
+    },
+    {
+      "medicine_id": "med_1016",
+      "symptom_id": "sym_indigestion"
+    },
+    {
+      "medicine_id": "med_1017",
+      "symptom_id": "sym_indigestion"
+    },
+    {
+      "medicine_id": "med_1018",
+      "symptom_id": "sym_indigestion"
+    },
+    {
+      "medicine_id": "med_1019",
+      "symptom_id": "sym_indigestion"
+    },
+    {
+      "medicine_id": "med_1020",
+      "symptom_id": "sym_indigestion"
+    },
+    {
+      "medicine_id": "med_1021",
+      "symptom_id": "sym_indigestion"
+    },
+    {
+      "medicine_id": "med_1022",
+      "symptom_id": "sym_indigestion"
+    },
+    {
+      "medicine_id": "med_1045",
+      "symptom_id": "sym_indigestion"
+    },
+    {
+      "medicine_id": "med_1088",
+      "symptom_id": "sym_indigestion"
+    },
+    {
+      "medicine_id": "med_1089",
+      "symptom_id": "sym_indigestion"
+    },
+    {
+      "medicine_id": "med_1023",
+      "symptom_id": "sym_constipation"
+    },
+    {
+      "medicine_id": "med_1024",
+      "symptom_id": "sym_constipation"
+    },
+    {
+      "medicine_id": "med_1025",
+      "symptom_id": "sym_constipation"
+    },
+    {
+      "medicine_id": "med_1321",
+      "symptom_id": "sym_constipation"
+    },
+    {
+      "medicine_id": "med_1322",
+      "symptom_id": "sym_constipation"
+    },
+    {
+      "medicine_id": "med_1323",
+      "symptom_id": "sym_constipation"
+    },
+    {
+      "medicine_id": "med_1324",
+      "symptom_id": "sym_constipation"
+    },
+    {
+      "medicine_id": "med_1325",
+      "symptom_id": "sym_constipation"
+    },
+    {
+      "medicine_id": "med_1026",
+      "symptom_id": "sym_diarrhoea"
+    },
+    {
+      "medicine_id": "med_1027",
+      "symptom_id": "sym_diarrhoea"
+    },
+    {
+      "medicine_id": "med_1044",
+      "symptom_id": "sym_diarrhoea"
+    },
+    {
+      "medicine_id": "med_1045",
+      "symptom_id": "sym_diarrhoea"
+    },
+    {
+      "medicine_id": "med_1046",
+      "symptom_id": "sym_diarrhoea"
+    },
+    {
+      "medicine_id": "med_1249",
+      "symptom_id": "sym_diarrhoea"
+    },
+    {
+      "medicine_id": "med_1250",
+      "symptom_id": "sym_diarrhoea"
+    },
+    {
+      "medicine_id": "med_1251",
+      "symptom_id": "sym_diarrhoea"
+    },
+    {
+      "medicine_id": "med_1252",
+      "symptom_id": "sym_diarrhoea"
+    },
+    {
+      "medicine_id": "med_1253",
+      "symptom_id": "sym_diarrhoea"
+    },
+    {
+      "medicine_id": "med_1020",
+      "symptom_id": "sym_nausea"
+    },
+    {
+      "medicine_id": "med_1027",
+      "symptom_id": "sym_nausea"
+    },
+    {
+      "medicine_id": "med_1028",
+      "symptom_id": "sym_nausea"
+    },
+    {
+      "medicine_id": "med_1029",
+      "symptom_id": "sym_nausea"
+    },
+    {
+      "medicine_id": "med_1086",
+      "symptom_id": "sym_nausea"
+    },
+    {
+      "medicine_id": "med_1147",
+      "symptom_id": "sym_nausea"
+    },
+    {
+      "medicine_id": "med_1148",
+      "symptom_id": "sym_nausea"
+    },
+    {
+      "medicine_id": "med_1149",
+      "symptom_id": "sym_nausea"
+    },
+    {
+      "medicine_id": "med_1153",
+      "symptom_id": "sym_nausea"
+    },
+    {
+      "medicine_id": "med_1154",
+      "symptom_id": "sym_nausea"
+    },
+    {
+      "medicine_id": "med_1001",
+      "symptom_id": "sym_body_pain"
+    },
+    {
+      "medicine_id": "med_1003",
+      "symptom_id": "sym_body_pain"
+    },
+    {
+      "medicine_id": "med_1005",
+      "symptom_id": "sym_body_pain"
+    },
+    {
+      "medicine_id": "med_1007",
+      "symptom_id": "sym_body_pain"
+    },
+    {
+      "medicine_id": "med_1008",
+      "symptom_id": "sym_body_pain"
+    },
+    {
+      "medicine_id": "med_1009",
+      "symptom_id": "sym_body_pain"
+    },
+    {
+      "medicine_id": "med_1014",
+      "symptom_id": "sym_body_pain"
+    },
+    {
+      "medicine_id": "med_1015",
+      "symptom_id": "sym_body_pain"
+    },
+    {
+      "medicine_id": "med_1027",
+      "symptom_id": "sym_body_pain"
+    },
+    {
+      "medicine_id": "med_1048",
+      "symptom_id": "sym_body_pain"
+    },
+    {
+      "medicine_id": "med_1005",
+      "symptom_id": "sym_back_pain"
+    },
+    {
+      "medicine_id": "med_1006",
+      "symptom_id": "sym_back_pain"
+    },
+    {
+      "medicine_id": "med_1007",
+      "symptom_id": "sym_back_pain"
+    },
+    {
+      "medicine_id": "med_1012",
+      "symptom_id": "sym_back_pain"
+    },
+    {
+      "medicine_id": "med_1013",
+      "symptom_id": "sym_back_pain"
+    },
+    {
+      "medicine_id": "med_1051",
+      "symptom_id": "sym_back_pain"
+    },
+    {
+      "medicine_id": "med_1082",
+      "symptom_id": "sym_back_pain"
+    },
+    {
+      "medicine_id": "med_1087",
+      "symptom_id": "sym_back_pain"
+    },
+    {
+      "medicine_id": "med_1096",
+      "symptom_id": "sym_back_pain"
+    },
+    {
+      "medicine_id": "med_1097",
+      "symptom_id": "sym_back_pain"
+    },
+    {
+      "medicine_id": "med_1006",
+      "symptom_id": "sym_joint_pain"
+    },
+    {
+      "medicine_id": "med_1007",
+      "symptom_id": "sym_joint_pain"
+    },
+    {
+      "medicine_id": "med_1008",
+      "symptom_id": "sym_joint_pain"
+    },
+    {
+      "medicine_id": "med_1012",
+      "symptom_id": "sym_joint_pain"
+    },
+    {
+      "medicine_id": "med_1014",
+      "symptom_id": "sym_joint_pain"
+    },
+    {
+      "medicine_id": "med_1051",
+      "symptom_id": "sym_joint_pain"
+    },
+    {
+      "medicine_id": "med_1052",
+      "symptom_id": "sym_joint_pain"
+    },
+    {
+      "medicine_id": "med_1096",
+      "symptom_id": "sym_joint_pain"
+    },
+    {
+      "medicine_id": "med_1097",
+      "symptom_id": "sym_joint_pain"
+    },
+    {
+      "medicine_id": "med_1098",
+      "symptom_id": "sym_joint_pain"
+    },
+    {
+      "medicine_id": "med_1030",
+      "symptom_id": "sym_allergy"
+    },
+    {
+      "medicine_id": "med_1031",
+      "symptom_id": "sym_allergy"
+    },
+    {
+      "medicine_id": "med_1062",
+      "symptom_id": "sym_allergy"
+    },
+    {
+      "medicine_id": "med_1183",
+      "symptom_id": "sym_allergy"
+    },
+    {
+      "medicine_id": "med_1184",
+      "symptom_id": "sym_allergy"
+    },
+    {
+      "medicine_id": "med_1185",
+      "symptom_id": "sym_allergy"
+    },
+    {
+      "medicine_id": "med_1186",
+      "symptom_id": "sym_allergy"
+    },
+    {
+      "medicine_id": "med_1187",
+      "symptom_id": "sym_allergy"
+    },
+    {
+      "medicine_id": "med_1188",
+      "symptom_id": "sym_allergy"
+    },
+    {
+      "medicine_id": "med_1189",
+      "symptom_id": "sym_allergy"
+    },
+    {
+      "medicine_id": "med_1030",
+      "symptom_id": "sym_itching"
+    },
+    {
+      "medicine_id": "med_1031",
+      "symptom_id": "sym_itching"
+    },
+    {
+      "medicine_id": "med_1060",
+      "symptom_id": "sym_itching"
+    },
+    {
+      "medicine_id": "med_1061",
+      "symptom_id": "sym_itching"
+    },
+    {
+      "medicine_id": "med_1062",
+      "symptom_id": "sym_itching"
+    },
+    {
+      "medicine_id": "med_1065",
+      "symptom_id": "sym_itching"
+    },
+    {
+      "medicine_id": "med_1066",
+      "symptom_id": "sym_itching"
+    },
+    {
+      "medicine_id": "med_1092",
+      "symptom_id": "sym_itching"
+    },
+    {
+      "medicine_id": "med_1183",
+      "symptom_id": "sym_itching"
+    },
+    {
+      "medicine_id": "med_1184",
+      "symptom_id": "sym_itching"
+    },
+    {
+      "medicine_id": "med_1047",
+      "symptom_id": "sym_skin_rash"
+    },
+    {
+      "medicine_id": "med_1060",
+      "symptom_id": "sym_skin_rash"
+    },
+    {
+      "medicine_id": "med_1062",
+      "symptom_id": "sym_skin_rash"
+    },
+    {
+      "medicine_id": "med_1198",
+      "symptom_id": "sym_skin_rash"
+    },
+    {
+      "medicine_id": "med_1199",
+      "symptom_id": "sym_skin_rash"
+    },
+    {
+      "medicine_id": "med_1200",
+      "symptom_id": "sym_skin_rash"
+    },
+    {
+      "medicine_id": "med_1264",
+      "symptom_id": "sym_skin_rash"
+    },
+    {
+      "medicine_id": "med_1265",
+      "symptom_id": "sym_skin_rash"
+    },
+    {
+      "medicine_id": "med_1266",
+      "symptom_id": "sym_skin_rash"
+    },
+    {
+      "medicine_id": "med_1267",
+      "symptom_id": "sym_skin_rash"
+    },
+    {
+      "medicine_id": "med_1076",
+      "symptom_id": "sym_insomnia"
+    },
+    {
+      "medicine_id": "med_1077",
+      "symptom_id": "sym_insomnia"
+    },
+    {
+      "medicine_id": "med_1201",
+      "symptom_id": "sym_insomnia"
+    },
+    {
+      "medicine_id": "med_1202",
+      "symptom_id": "sym_insomnia"
+    },
+    {
+      "medicine_id": "med_1203",
+      "symptom_id": "sym_insomnia"
+    },
+    {
+      "medicine_id": "med_1076",
+      "symptom_id": "sym_stress"
+    },
+    {
+      "medicine_id": "med_1077",
+      "symptom_id": "sym_stress"
+    },
+    {
+      "medicine_id": "med_1078",
+      "symptom_id": "sym_stress"
+    },
+    {
+      "medicine_id": "med_1198",
+      "symptom_id": "sym_stress"
+    },
+    {
+      "medicine_id": "med_1199",
+      "symptom_id": "sym_stress"
+    },
+    {
+      "medicine_id": "med_1200",
+      "symptom_id": "sym_stress"
+    },
+    {
+      "medicine_id": "med_1201",
+      "symptom_id": "sym_stress"
+    },
+    {
+      "medicine_id": "med_1202",
+      "symptom_id": "sym_stress"
+    },
+    {
+      "medicine_id": "med_1203",
+      "symptom_id": "sym_stress"
+    },
+    {
+      "medicine_id": "med_1303",
+      "symptom_id": "sym_stress"
+    },
+    {
+      "medicine_id": "med_1004",
+      "symptom_id": "sym_toothache"
+    },
+    {
+      "medicine_id": "med_1005",
+      "symptom_id": "sym_toothache"
+    },
+    {
+      "medicine_id": "med_1008",
+      "symptom_id": "sym_toothache"
+    },
+    {
+      "medicine_id": "med_1011",
+      "symptom_id": "sym_toothache"
+    },
+    {
+      "medicine_id": "med_1046",
+      "symptom_id": "sym_toothache"
+    },
+    {
+      "medicine_id": "med_1067",
+      "symptom_id": "sym_toothache"
+    },
+    {
+      "medicine_id": "med_1069",
+      "symptom_id": "sym_toothache"
+    },
+    {
+      "medicine_id": "med_1070",
+      "symptom_id": "sym_toothache"
+    },
+    {
+      "medicine_id": "med_1071",
+      "symptom_id": "sym_toothache"
+    },
+    {
+      "medicine_id": "med_1006",
+      "symptom_id": "sym_menstrual_cramps"
+    },
+    {
+      "medicine_id": "med_1009",
+      "symptom_id": "sym_menstrual_cramps"
+    },
+    {
+      "medicine_id": "med_1087",
+      "symptom_id": "sym_menstrual_cramps"
+    },
+    {
+      "medicine_id": "med_1057",
+      "symptom_id": "sym_minor_cuts"
+    },
+    {
+      "medicine_id": "med_1058",
+      "symptom_id": "sym_minor_cuts"
+    },
+    {
+      "medicine_id": "med_1059",
+      "symptom_id": "sym_minor_cuts"
+    },
+    {
+      "medicine_id": "med_1063",
+      "symptom_id": "sym_minor_cuts"
+    },
+    {
+      "medicine_id": "med_1064",
+      "symptom_id": "sym_minor_cuts"
+    },
+    {
+      "medicine_id": "med_1072",
+      "symptom_id": "sym_eye_irritation"
+    },
+    {
+      "medicine_id": "med_1073",
+      "symptom_id": "sym_eye_irritation"
+    },
+    {
+      "medicine_id": "med_1074",
+      "symptom_id": "sym_eye_irritation"
+    },
+    {
+      "medicine_id": "med_1048",
+      "symptom_id": "sym_vitamin_deficiency"
+    },
+    {
+      "medicine_id": "med_1049",
+      "symptom_id": "sym_vitamin_deficiency"
+    },
+    {
+      "medicine_id": "med_1050",
+      "symptom_id": "sym_vitamin_deficiency"
+    },
+    {
+      "medicine_id": "med_1051",
+      "symptom_id": "sym_vitamin_deficiency"
+    },
+    {
+      "medicine_id": "med_1052",
+      "symptom_id": "sym_vitamin_deficiency"
+    },
+    {
+      "medicine_id": "med_1053",
+      "symptom_id": "sym_vitamin_deficiency"
+    },
+    {
+      "medicine_id": "med_1054",
+      "symptom_id": "sym_vitamin_deficiency"
+    },
+    {
+      "medicine_id": "med_1055",
+      "symptom_id": "sym_vitamin_deficiency"
+    },
+    {
+      "medicine_id": "med_1056",
+      "symptom_id": "sym_vitamin_deficiency"
+    },
+    {
+      "medicine_id": "med_1079",
+      "symptom_id": "sym_vitamin_deficiency"
+    },
+    {
+      "medicine_id": "med_1060",
+      "symptom_id": "sym_fungal_infection"
+    },
+    {
+      "medicine_id": "med_1061",
+      "symptom_id": "sym_fungal_infection"
+    },
+    {
+      "medicine_id": "med_1264",
+      "symptom_id": "sym_fungal_infection"
+    },
+    {
+      "medicine_id": "med_1265",
+      "symptom_id": "sym_fungal_infection"
+    },
+    {
+      "medicine_id": "med_1266",
+      "symptom_id": "sym_fungal_infection"
+    },
+    {
+      "medicine_id": "med_1267",
+      "symptom_id": "sym_fungal_infection"
+    },
+    {
+      "medicine_id": "med_1268",
+      "symptom_id": "sym_fungal_infection"
+    },
+    {
+      "medicine_id": "med_1269",
+      "symptom_id": "sym_fungal_infection"
+    },
+    {
+      "medicine_id": "med_1276",
+      "symptom_id": "sym_fungal_infection"
+    },
+    {
+      "medicine_id": "med_1277",
+      "symptom_id": "sym_fungal_infection"
+    },
+    {
+      "medicine_id": "med_1049",
+      "symptom_id": "sym_mouth_ulcers"
+    },
+    {
+      "medicine_id": "med_1067",
+      "symptom_id": "sym_mouth_ulcers"
+    },
+    {
+      "medicine_id": "med_1068",
+      "symptom_id": "sym_mouth_ulcers"
+    },
+    {
+      "medicine_id": "med_1069",
+      "symptom_id": "sym_mouth_ulcers"
+    },
+    {
+      "medicine_id": "med_1012",
+      "symptom_id": "sym_muscle_cramps"
+    },
+    {
+      "medicine_id": "med_1013",
+      "symptom_id": "sym_muscle_cramps"
+    },
+    {
+      "medicine_id": "med_1053",
+      "symptom_id": "sym_muscle_cramps"
+    },
+    {
+      "medicine_id": "med_1054",
+      "symptom_id": "sym_muscle_cramps"
+    },
+    {
+      "medicine_id": "med_1084",
+      "symptom_id": "sym_muscle_cramps"
+    },
+    {
+      "medicine_id": "med_1102",
+      "symptom_id": "sym_muscle_cramps"
+    },
+    {
+      "medicine_id": "med_1103",
+      "symptom_id": "sym_muscle_cramps"
+    },
+    {
+      "medicine_id": "med_1104",
+      "symptom_id": "sym_muscle_cramps"
+    },
+    {
+      "medicine_id": "med_1028",
+      "symptom_id": "sym_motion_sickness"
+    },
+    {
+      "medicine_id": "med_1029",
+      "symptom_id": "sym_motion_sickness"
+    },
+    {
+      "medicine_id": "med_1001",
+      "symptom_id": "sym_motion_sickness"
+    },
+    {
+      "medicine_id": "med_1002",
+      "symptom_id": "sym_motion_sickness"
+    },
+    {
+      "medicine_id": "med_1003",
+      "symptom_id": "sym_motion_sickness"
+    },
+    {
+      "medicine_id": "med_1072",
+      "symptom_id": "sym_dry_eyes"
+    },
+    {
+      "medicine_id": "med_1073",
+      "symptom_id": "sym_dry_eyes"
+    },
+    {
+      "medicine_id": "med_1001",
+      "symptom_id": "sym_dry_eyes"
+    },
+    {
+      "medicine_id": "med_1002",
+      "symptom_id": "sym_dry_eyes"
+    },
+    {
+      "medicine_id": "med_1003",
+      "symptom_id": "sym_dry_eyes"
+    },
+    {
+      "medicine_id": "med_1041",
+      "symptom_id": "sym_ear_pain"
+    },
+    {
+      "medicine_id": "med_1074",
+      "symptom_id": "sym_ear_pain"
+    },
+    {
+      "medicine_id": "med_1075",
+      "symptom_id": "sym_ear_pain"
+    },
+    {
+      "medicine_id": "med_1234",
+      "symptom_id": "sym_ear_pain"
+    },
+    {
+      "medicine_id": "med_1235",
+      "symptom_id": "sym_ear_pain"
+    },
+    {
+      "medicine_id": "med_1236",
+      "symptom_id": "sym_ear_pain"
+    },
+    {
+      "medicine_id": "med_1261",
+      "symptom_id": "sym_ear_pain"
+    },
+    {
+      "medicine_id": "med_1262",
+      "symptom_id": "sym_ear_pain"
+    },
+    {
+      "medicine_id": "med_1263",
+      "symptom_id": "sym_ear_pain"
+    },
+    {
+      "medicine_id": "med_1025",
+      "symptom_id": "sym_piles"
+    },
+    {
+      "medicine_id": "med_1092",
+      "symptom_id": "sym_piles"
+    },
+    {
+      "medicine_id": "med_1001",
+      "symptom_id": "sym_piles"
+    },
+    {
+      "medicine_id": "med_1002",
+      "symptom_id": "sym_piles"
+    },
+    {
+      "medicine_id": "med_1003",
+      "symptom_id": "sym_piles"
+    },
+    {
+      "medicine_id": "med_1054",
+      "symptom_id": "sym_hair_fall"
+    },
+    {
+      "medicine_id": "med_1065",
+      "symptom_id": "sym_hair_fall"
+    },
+    {
+      "medicine_id": "med_1066",
+      "symptom_id": "sym_hair_fall"
+    },
+    {
+      "medicine_id": "med_1285",
+      "symptom_id": "sym_hair_fall"
+    },
+    {
+      "medicine_id": "med_1286",
+      "symptom_id": "sym_hair_fall"
+    },
+    {
+      "medicine_id": "med_1287",
+      "symptom_id": "sym_hair_fall"
+    }
+  ]
+}

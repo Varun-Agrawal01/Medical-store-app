@@ -1,13 +1,14 @@
 package com.example.project;
 
-import org.junit.Test;
-
 import com.example.project.models.CartItem;
 import com.example.project.models.Medicine;
 import com.example.project.models.Order;
 import com.example.project.models.OrderItem;
 import com.example.project.utils.FormatUtils;
+import com.example.project.utils.PricingUtils;
 import com.example.project.utils.SeedData;
+
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +36,20 @@ public class MediStoreUnitTest {
     }
 
     @Test
-    public void testOrderTotalsCalculation() {
+    public void testOrderTotalsCalculationUsingProductionLogic() {
         List<OrderItem> items = new ArrayList<>();
-        items.add(new OrderItem("med1", "Dolo 650", 32.50, 2)); // 65.00
-        items.add(new OrderItem("med2", "Digene", 115.00, 1));  // 115.00
+        OrderItem item1 = new OrderItem("med1", "Dolo 650", 32.50, 2); // 65.00
+        OrderItem item2 = new OrderItem("med2", "Digene", 115.00, 1);  // 115.00
+        items.add(item1);
+        items.add(item2);
 
-        double subtotal = 180.00;
-        double deliveryFee = 50.00; // subtotal <= 500
-        double total = subtotal + deliveryFee;
+        double subtotal = item1.getItemTotal() + item2.getItemTotal(); // 180.00
+        // Real production logic
+        double deliveryFee = PricingUtils.calculateDeliveryFee(subtotal);
+        double total = PricingUtils.calculateTotal(subtotal, deliveryFee);
 
-        Order order = new Order("ORD123", "user1", "John", "9876543210", "123 Street", items, subtotal, deliveryFee, total, "Pending", System.currentTimeMillis(), System.currentTimeMillis(), true);
+        Order order = new Order("ORD123", "user1", "John", "9876543210", "123 Street", items,
+                subtotal, deliveryFee, total, "Pending", System.currentTimeMillis(), System.currentTimeMillis(), true);
 
         assertEquals("ORD123", order.getOrderId());
         assertEquals(180.00, order.getSubtotal(), 0.001);

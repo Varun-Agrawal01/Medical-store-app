@@ -11,16 +11,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.project.Home_page;
+import com.example.project.HomeActivity;
 import com.example.project.R;
-import com.example.project.data.FirestoreRepository;
+import com.example.project.data.MediRepository;
 import com.example.project.models.Order;
 import com.example.project.models.OrderItem;
 import com.example.project.utils.FormatUtils;
 import com.example.project.utils.PdfGenerator;
 
 import java.io.File;
-import java.util.List;
 
 public class BillActivity extends AppCompatActivity {
 
@@ -29,7 +28,7 @@ public class BillActivity extends AppCompatActivity {
     private Button btnGeneratePdf, btnSharePdf, btnHomeReturn;
     private ImageButton btnBack;
 
-    private FirestoreRepository repository;
+    private MediRepository repository;
     private String orderId;
     private Order currentOrder;
     private File generatedPdfFile;
@@ -39,7 +38,7 @@ public class BillActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bill);
 
-        repository = FirestoreRepository.getInstance(this);
+        repository = MediRepository.getInstance(this);
 
         btnBack = findViewById(R.id.btnBackBill);
         tvOrderId = findViewById(R.id.tvBillOrderId);
@@ -90,7 +89,7 @@ public class BillActivity extends AppCompatActivity {
         });
 
         btnHomeReturn.setOnClickListener(v -> {
-            Intent intent = new Intent(BillActivity.this, Home_page.class);
+            Intent intent = new Intent(BillActivity.this, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
@@ -98,48 +97,45 @@ public class BillActivity extends AppCompatActivity {
     }
 
     private void loadOrder() {
-        repository.getAllOrders(new FirestoreRepository.Callback<List<Order>>() {
+        // Direct single-row query by order ID
+        repository.getOrderById(orderId, new MediRepository.Callback<Order>() {
             @Override
-            public void onSuccess(List<Order> orders) {
-                for (Order o : orders) {
-                    if (o.getOrderId().equals(orderId)) {
-                        currentOrder = o;
-                        displayOrderDetails(o);
-                        break;
-                    }
-                }
+            public void onSuccess(Order order) {
+                currentOrder = order;
+                displayOrderDetails(order);
             }
 
             @Override
             public void onError(String error) {
                 Toast.makeText(BillActivity.this, "Error loading order: " + error, Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
 
     private void displayOrderDetails(Order o) {
         tvOrderId.setText("Order #" + o.getOrderId());
-        tvStatus.setText(o.getStatus());
-        tvDate.setText("Date: " + FormatUtils.formatDate(o.getCreatedAt()));
-
-        tvCustName.setText("Name: " + o.getCustomerName());
-        tvPhone.setText("Phone: " + o.getCustomerPhone());
-        tvAddress.setText("Address: " + o.getDeliveryAddress());
-
-        tvSubtotal.setText(FormatUtils.formatPrice(o.getSubtotal()));
-        tvDeliveryFee.setText(FormatUtils.formatPrice(o.getDeliveryFee()));
-        tvTotal.setText(FormatUtils.formatPrice(o.getTotal()));
+        tvStatus.setText("Status: " + o.getStatus());
+        tvDate.setText("Placed On: " + FormatUtils.formatDate(o.getCreatedAt()));
+        tvCustName.setText(o.getCustomerName());
+        tvPhone.setText(o.getCustomerPhone());
+        tvAddress.setText(o.getDeliveryAddress());
 
         layoutItemsContainer.removeAllViews();
         if (o.getItems() != null) {
             for (OrderItem item : o.getItems()) {
-                TextView tvItem = new TextView(this);
-                tvItem.setText(item.getMedicineName() + " x" + item.getQuantity() + "  -  " + FormatUtils.formatPrice(item.getItemTotal()));
-                tvItem.setTextColor(getColor(R.color.black));
-                tvItem.setTextSize(13f);
-                tvItem.setPadding(0, 4, 0, 4);
-                layoutItemsContainer.addView(tvItem);
+                TextView itemRow = new TextView(this);
+                itemRow.setText(String.format("• %s x%d   -   %s",
+                        item.getMedicineName(), item.getQuantity(), FormatUtils.formatPrice(item.getItemTotal())));
+                itemRow.setTextColor(getColor(R.color.black));
+                itemRow.setTextSize(14f);
+                itemRow.setPadding(0, 4, 0, 4);
+                layoutItemsContainer.addView(itemRow);
             }
         }
+
+        tvSubtotal.setText(FormatUtils.formatPrice(o.getSubtotal()));
+        tvDeliveryFee.setText(FormatUtils.formatPrice(o.getDeliveryFee()));
+        tvTotal.setText(FormatUtils.formatPrice(o.getTotal()));
     }
 }

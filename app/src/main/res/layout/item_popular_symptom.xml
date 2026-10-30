@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="1dp"
+    app:cardBackgroundColor="@color/white"
+    app:strokeColor="@color/teal_primary"
+    app:strokeWidth="1dp">
+
+    <TextView
+        android:id="@+id/tvPopularSymptomName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:text="Fever"
+        android:textColor="@color/teal_primary_dark"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+</com.google.android.material.card.MaterialCardView>

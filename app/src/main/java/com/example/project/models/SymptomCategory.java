@@ -10,7 +10,7 @@ public class SymptomCategory {
     private List<String> linkedMedicineIds = new ArrayList<>();
 
     public SymptomCategory() {
-        // Required for Firestore
+        // Default constructor
     }
 
     public SymptomCategory(String categoryId, String name, String description, List<String> linkedMedicineIds) {
@@ -52,3 +52,4 @@ public class SymptomCategory {
         this.linkedMedicineIds = linkedMedicineIds;
     }
 }
+

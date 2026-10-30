@@ -19,11 +19,11 @@
 
         <ImageButton
             android:id="@+id/btnBackAddEdit"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Back"
-            android:src="@drawable/back_arrow"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_arrow_back"
             app:tint="@color/white" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Add / Edit Medicine"
+            android:text="@string/add_edit_medicine_title"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -67,7 +67,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Medicine Name"
+                        android:text="@string/medicine_name_label"
                         android:textColor="@color/black"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -168,21 +168,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Category (e.g. Fever, Cold, Acidity)"
+                        android:text="Symptoms / Category"
                         android:textColor="@color/black"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/etMedCategory"
+                    <Button
+                        android:id="@+id/btnSelectSymptoms"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
-                        android:background="@drawable/edit_text_border"
-                        android:paddingHorizontal="12dp"
-                        android:hint="Category Name"
-                        android:inputType="text"
+                        android:text="Select Symptoms…"
                         android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvSelectedSymptoms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="None selected"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
 
                     <TextView
                         android:layout_width="wrap_content"

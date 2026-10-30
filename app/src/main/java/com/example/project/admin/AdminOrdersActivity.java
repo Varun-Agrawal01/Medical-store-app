@@ -1,5 +1,6 @@
 package com.example.project.admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,9 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
 import com.example.project.adapters.OrderAdapter;
-import com.example.project.data.FirestoreRepository;
+import com.example.project.auth.AdminLoginActivity;
+import com.example.project.data.MediRepository;
 import com.example.project.models.Order;
+import com.example.project.models.User;
 import com.example.project.utils.PdfGenerator;
+import com.example.project.utils.SessionManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,18 +33,42 @@ public class AdminOrdersActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private Button btnAll, btnPending, btnConfirmed, btnPreparing, btnCompleted, btnCancelled;
 
-    private FirestoreRepository repository;
+    private MediRepository repository;
+    private SessionManager sessionManager;
     private OrderAdapter adapter;
-    private List<Order> allOrders = new ArrayList<>();
-    private List<Order> displayedOrders = new ArrayList<>();
+    private final List<Order> allOrders = new ArrayList<>();
+    private final List<Order> displayedOrders = new ArrayList<>();
     private String currentFilter = "All";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.order_page);
 
-        repository = FirestoreRepository.getInstance(this);
+        // Role Guard
+        sessionManager = new SessionManager(this);
+        repository = MediRepository.getInstance(this);
+
+        String currentUserId = sessionManager.getUserId();
+        if (currentUserId == null) {
+            redirectToLogin();
+            return;
+        }
+
+        repository.getUserById(currentUserId, new MediRepository.Callback<User>() {
+            @Override
+            public void onSuccess(User user) {
+                if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
+                    redirectToLogin();
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                redirectToLogin();
+            }
+        });
+
+        setContentView(R.layout.order_page);
 
         rvOrders = findViewById(R.id.rvAdminOrders);
         tvNoOrders = findViewById(R.id.textView28);
@@ -54,11 +82,10 @@ public class AdminOrdersActivity extends AppCompatActivity {
         btnCancelled = findViewById(R.id.btnFilterCancelled);
 
         btnBack.setOnClickListener(v -> finish());
-
         setupFilterListeners();
 
         rvOrders.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new OrderAdapter(this, displayedOrders, new OrderAdapter.OnOrderClickListener() {
+        adapter = new OrderAdapter(this, new OrderAdapter.OnOrderClickListener() {
             @Override
             public void onOrderClick(Order order) {
                 showOrderStatusDialog(order);
@@ -73,6 +100,13 @@ public class AdminOrdersActivity extends AppCompatActivity {
             }
         });
         rvOrders.setAdapter(adapter);
+    }
+
+    private void redirectToLogin() {
+        Intent intent = new Intent(this, AdminLoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -96,26 +130,30 @@ public class AdminOrdersActivity extends AppCompatActivity {
     }
 
     private void loadOrders() {
-        repository.getAllOrders(new FirestoreRepository.Callback<List<Order>>() {
+        repository.getAllOrders(new MediRepository.Callback<List<Order>>() {
             @Override
-            public void onSuccess(List<Order> result) {
+            public void onSuccess(List<Order> orders) {
                 allOrders.clear();
-                allOrders.addAll(result);
+                allOrders.addAll(orders);
                 filterOrders();
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(AdminOrdersActivity.this, "Error loading orders: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdminOrdersActivity.this, "Failed to load orders: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void filterOrders() {
         displayedOrders.clear();
-        for (Order o : allOrders) {
-            if ("All".equalsIgnoreCase(currentFilter) || currentFilter.equalsIgnoreCase(o.getStatus())) {
-                displayedOrders.add(o);
+        if ("All".equalsIgnoreCase(currentFilter)) {
+            displayedOrders.addAll(allOrders);
+        } else {
+            for (Order o : allOrders) {
+                if (currentFilter.equalsIgnoreCase(o.getStatus())) {
+                    displayedOrders.add(o);
+                }
             }
         }
 
@@ -126,34 +164,34 @@ public class AdminOrdersActivity extends AppCompatActivity {
             tvNoOrders.setVisibility(View.GONE);
             rvOrders.setVisibility(View.VISIBLE);
         }
-        adapter.notifyDataSetChanged();
+        adapter.submitList(new ArrayList<>(displayedOrders));
     }
 
     private void showOrderStatusDialog(Order order) {
         String[] statuses = {"Pending", "Confirmed", "Preparing", "Completed", "Cancelled"};
         new AlertDialog.Builder(this)
-                .setTitle("Update Status for Order #" + order.getOrderId())
+                .setTitle("Update Status: Order #" + order.getOrderId())
                 .setItems(statuses, (dialog, which) -> {
                     String selectedStatus = statuses[which];
-                    if (selectedStatus.equalsIgnoreCase(order.getStatus())) {
-                        Toast.makeText(AdminOrdersActivity.this, "Status is already " + selectedStatus, Toast.LENGTH_SHORT).show();
-                        return;
+                    if (!selectedStatus.equalsIgnoreCase(order.getStatus())) {
+                        updateOrderStatus(order, selectedStatus);
                     }
-
-                    repository.updateOrderStatus(order, selectedStatus, new FirestoreRepository.Callback<Void>() {
-                        @Override
-                        public void onSuccess(Void result) {
-                            Toast.makeText(AdminOrdersActivity.this, "Order status updated to " + selectedStatus, Toast.LENGTH_SHORT).show();
-                            loadOrders();
-                        }
-
-                        @Override
-                        public void onError(String error) {
-                            Toast.makeText(AdminOrdersActivity.this, "Failed to update status: " + error, Toast.LENGTH_SHORT).show();
-                        }
-                    });
                 })
-                .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    private void updateOrderStatus(Order order, String newStatus) {
+        repository.updateOrderStatus(order, newStatus, new MediRepository.Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                Toast.makeText(AdminOrdersActivity.this, "Order updated to " + newStatus, Toast.LENGTH_SHORT).show();
+                loadOrders();
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(AdminOrdersActivity.this, "Error updating status: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
